@@ -47,6 +47,6 @@ void NS::bZoneStation::run(
         {
             Serial.println("Train in: "+ String(pcTaskGetName(currTask)));
         }
-        vTaskDelay(1000 / portTICK_PERIOD_MS);
+        vTaskDelay(20 / portTICK_PERIOD_MS);
     }
 }
