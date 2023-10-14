@@ -51,7 +51,8 @@ void setup(
         CONSTANTS::Priority::BLINK,
         &g_blinkTaskHandler);
 
-    g_bZoneStation.init();
+    g_bZoneStation.init(
+        nullptr);
     xTaskCreate(
         taskLauncher,
         CONSTANTS::STATION_TASK_NAME,

@@ -37,6 +37,8 @@ namespace bzones
                  * occupied.
                  */
                 bool m_isOccupied;
+
+                bzones::interfaces::IBlockZone* m_nextZone;
             
             public:
                 /**
@@ -61,7 +63,7 @@ namespace bzones
                  * @details
                  */
                 void init(
-                    void);
+                    bzones::interfaces::IBlockZone* _nextZone);
 
                 /**
                  * @brief Tells the user if this block zone is occupied.

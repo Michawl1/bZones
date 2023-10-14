@@ -23,15 +23,17 @@ NS::bZoneStation::bZoneStation(
 }
 
 void NS::bZoneStation::init(
-    void)
+    bzones::interfaces::IBlockZone* _nextZone)
 {
+    m_nextZone = _nextZone;
+
     m_isInitialized = true;
 }
 
 bool NS::bZoneStation::isOccupied(
     void)
 {
-    return false;
+    return m_isOccupied;
 }
 
 void NS::bZoneStation::run(
