@@ -25,7 +25,7 @@ static TaskHandle_t g_blinkTaskHandler;
  * @details
  */
 static void taskLauncher(
-    void* _iTask);
+    bzones::interfaces::ITask* _iTask);
 
 void setup(
     void)
@@ -47,8 +47,7 @@ void loop(
 }
 
 void taskLauncher(
-    void* _iTask)
+    bzones::interfaces::ITask* _iTask)
 {
-    bzones::interfaces::ITask* instance = reinterpret_cast<bzones::interfaces::ITask*>(_iTask);
-    instance->run();
+    _iTask->run();
 }
