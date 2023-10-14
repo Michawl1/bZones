@@ -10,6 +10,7 @@
  *******************************************************************************
  */
 
+#include <Arduino.h>
 #include "blink.hpp"
 
 namespace NS = bzones::tasks;
@@ -30,6 +31,8 @@ void NS::Blink::init(
 void NS::Blink::run(
     void)
 {
+    TaskHandle_t currTask = xTaskGetCurrentTaskHandle();
+    Serial.println("Starting task: " + String(pcTaskGetName(currTask)));
     pinMode(13, OUTPUT);
     while(true)
     {

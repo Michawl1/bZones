@@ -10,9 +10,8 @@
  *******************************************************************************
  */
 
-#include <Arduino_FreeRTOS.h>
 #include <Arduino.h>
-#include "interfaces/IBlockZone.hpp"
+#include <Arduino_FreeRTOS.h>
 #include "interfaces/ITask.hpp"
 
 #pragma once
@@ -21,8 +20,7 @@ namespace bzones
 {
     namespace tasks
     {
-        class bZoneStation :
-            public bzones::interfaces::IBlockZone,
+        class bZoneStation:
             public bzones::interfaces::ITask
         {
             private:
@@ -37,12 +35,6 @@ namespace bzones
                  * occupied.
                  */
                 bool m_isOccupied;
-
-                /**
-                 * @brief The next block zone, used to know if it is safe to
-                 * dispatch.
-                 */
-                bzones::interfaces::IBlockZone* m_nextBlockZone;
             
             public:
                 /**
@@ -67,18 +59,7 @@ namespace bzones
                  * @details
                  */
                 void init(
-                    bzones::interfaces::IBlockZone* _nextBlockZone);
-
-                /**
-                 * @brief Tells the user if this block zone is occupied.
-                 * @pre
-                 * @post
-                 * @return True if this block zone has a train in it, false
-                 * otherwise.
-                 * @details
-                 */
-                bool isOccupied(
-                    void) override;
+                    void);
 
                 /**
                  * @brief Runs this object's task.

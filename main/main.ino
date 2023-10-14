@@ -11,10 +11,17 @@
  *******************************************************************************
  */
 #include <Arduino_FreeRTOS.h>
+#include "interfaces/ITask.hpp"
+#include "blink.hpp"
+#include "bZoneStation.hpp"
 
+static bzones::tasks::Blink g_blinkTask;
 static TaskHandle_t g_blinkTaskHandler;
-static TaskHandle_t g_serialTaskHandler;
-static TaskHandle_t g_serialTaskHandler2;
+static bzones::tasks::bZoneStation g_bZoneStation;
+static TaskHandle_t g_bZoneStationTaskHandler;
+
+static void taskLauncher(
+    void* _param);
 
 /**
  * @brief Starts a blink task.
@@ -35,30 +42,25 @@ void setup(
     Serial.begin(9600);
     while(!Serial);
 
+    g_blinkTask.init();
+
     Serial.println("Starting...");
     xTaskCreate(
-        blinkTask,
+        taskLauncher,
         "Blink",
         192,
-        nullptr,
+        &g_blinkTask,
         0,
         &g_blinkTaskHandler);
 
+    g_bZoneStation.init();
     xTaskCreate(
-        serialTask,
-        "Serial",
+        taskLauncher,
+        "Station",
         192,
-        nullptr,
+        &g_bZoneStation,
         1,
-        &g_serialTaskHandler);
-    
-    xTaskCreate(
-        serialTask,
-        "Other",
-        192,
-        nullptr,
-        2,
-        &g_serialTaskHandler2);
+        &g_bZoneStationTaskHandler);
 }
 
 void loop(
@@ -66,17 +68,11 @@ void loop(
 {
 }
 
-void blinkTask(
-    void* _params)
+void taskLauncher(
+    void* _param)
 {
-    pinMode(13, OUTPUT);
-    while(true)
-    {
-        digitalWrite(13, HIGH);
-        vTaskDelay(500 / portTICK_PERIOD_MS);
-        digitalWrite(13, LOW);
-        vTaskDelay(500 / portTICK_PERIOD_MS);
-    }
+    bzones::interfaces::ITask* instance = reinterpret_cast<bzones::interfaces::ITask*>(_param);
+    instance->run();
 }
 
 void serialTask(

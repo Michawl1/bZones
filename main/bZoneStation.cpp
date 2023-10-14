@@ -10,6 +10,7 @@
  *******************************************************************************
  */
 
+#include <Arduino.h>
 #include "bZoneStation.hpp"
 
 namespace NS = bzones::tasks;
@@ -17,31 +18,24 @@ namespace NS = bzones::tasks;
 NS::bZoneStation::bZoneStation(
     void)
 : m_isInitialized(false),
-  m_isOccupied(false),
-  m_nextBlockZone(nullptr)
+  m_isOccupied(false)
 {
 }
 
 void NS::bZoneStation::init(
-    bzones::interfaces::IBlockZone* _nextBlockZone)
-{
-    m_nextBlockZone = _nextBlockZone;
-
-    m_isInitialized = true;
-}
-
-bool NS::bZoneStation::isOccupied(
     void)
 {
-    return m_isOccupied;
+    m_isInitialized = true;
 }
 
 void NS::bZoneStation::run(
     void)
 {
+    TaskHandle_t currTask = xTaskGetCurrentTaskHandle();
+    Serial.println("Starting task: " + String(pcTaskGetName(currTask)));
     while(true)
     {
         Serial.println("station");
-        vTaskDelay(10000 / portTICK_PERIOD_MS);
+        vTaskDelay(1000 / portTICK_PERIOD_MS);
     }
 }
