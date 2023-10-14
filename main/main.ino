@@ -14,23 +14,24 @@
 #include "interfaces/ITask.hpp"
 #include "blink.hpp"
 #include "bZoneStation.hpp"
+#include "Constants.hpp"
 
 static bzones::tasks::Blink g_blinkTask;
 static TaskHandle_t g_blinkTaskHandler;
-static bzones::tasks::bZoneStation g_stationTask;
-static TaskHandle_t g_stationTaskHandler;
+static bzones::tasks::bZoneStation g_bZoneStation;
+static TaskHandle_t g_bZoneStationTaskHandler;
+
+namespace CONSTANTS = bzones::constants;
 
 /**
- * @brief A static wrapper to spin a object based task.
+ * @brief Generically launches a task.
  * @pre
  * @post
  * @return This function performs an operation and does not return a value.
  * @details
  */
 static void taskLauncher(
-    bzones::interfaces::ITask* _iTask);
-static void taskLauncher2(
-    bzones::interfaces::ITask* _iTask);
+    void* _param);
 
 void setup(
     void)
@@ -39,24 +40,24 @@ void setup(
     while(!Serial);
 
     Serial.println("Starting...");
+
     g_blinkTask.init();
     xTaskCreate(
         taskLauncher,
-        "Blink",
-        192,
+        CONSTANTS::BLINK_TASK_NAME,
+        CONSTANTS::BLINK_TASK_STACK_SIZE,
         &g_blinkTask,
-        0,
+        CONSTANTS::Priority::BLINK,
         &g_blinkTaskHandler);
 
-    g_stationTask.init(
-        &g_stationTask);
+    g_bZoneStation.init();
     xTaskCreate(
         taskLauncher,
-        "Station",
-        192,
-        &g_stationTask,
-        1,
-        &g_stationTaskHandler);
+        CONSTANTS::STATION_TASK_NAME,
+        CONSTANTS::STATION_TASK_STACK_SIZE,
+        &g_bZoneStation,
+        CONSTANTS::Priority::STATION,
+        &g_bZoneStationTaskHandler);
 }
 
 void loop(
@@ -65,13 +66,8 @@ void loop(
 }
 
 void taskLauncher(
-    bzones::interfaces::ITask* _iTask)
+    void* _param)
 {
-    _iTask->run();
-}
-
-void taskLauncher2(
-    bzones::interfaces::ITask* _iTask)
-{
-    _iTask->run();
+    bzones::interfaces::ITask* instance = reinterpret_cast<bzones::interfaces::ITask*>(_param);
+    instance->run();
 }
