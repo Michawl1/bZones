@@ -11,7 +11,7 @@
  *******************************************************************************
  */
 #include <Arduino_FreeRTOS.h>
-#include "ITask.hpp"
+#include "interfaces/ITask.hpp"
 #include "blink.hpp"
 
 static bzones::tasks::Blink g_blinkTask;

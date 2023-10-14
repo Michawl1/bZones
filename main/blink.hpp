@@ -12,7 +12,7 @@
 
 #include <Arduino.h>
 #include <Arduino_FreeRTOS.h>
-#include "ITask.hpp"
+#include "interfaces/ITask.hpp"
 
 #pragma once
 
