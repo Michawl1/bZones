@@ -13,9 +13,12 @@
 #include <Arduino_FreeRTOS.h>
 #include "interfaces/ITask.hpp"
 #include "blink.hpp"
+#include "bZoneStation.hpp"
 
 static bzones::tasks::Blink g_blinkTask;
 static TaskHandle_t g_blinkTaskHandler;
+static bzones::tasks::bZoneStation g_stationTask;
+static TaskHandle_t g_stationTaskHandler;
 
 /**
  * @brief A static wrapper to spin a object based task.
@@ -35,10 +38,22 @@ void setup(
     xTaskCreate(
         taskLauncher,
         "Blink",
-        512,
+        192,
         &g_blinkTask,
         1,
         &g_blinkTaskHandler);
+
+    /*
+    g_stationTask.init(
+        nullptr);
+    xTaskCreate(
+        taskLauncher,
+        "Station",
+        192,
+        &g_stationTask,
+        2,
+        &g_stationTaskHandler);
+        */
 }
 
 void loop(
