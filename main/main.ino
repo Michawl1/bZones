@@ -11,26 +11,23 @@
  *******************************************************************************
  */
 #include <Arduino_FreeRTOS.h>
-#include "interfaces/ITask.hpp"
-#include "blink.hpp"
-#include "bZoneStation.hpp"
 
-static bzones::tasks::Blink g_blinkTask;
 static TaskHandle_t g_blinkTaskHandler;
-static bzones::tasks::bZoneStation g_stationTask;
-static TaskHandle_t g_stationTaskHandler;
+static TaskHandle_t g_serialTaskHandler;
+static TaskHandle_t g_serialTaskHandler2;
 
 /**
- * @brief A static wrapper to spin a object based task.
+ * @brief Starts a blink task.
  * @pre
  * @post
  * @return This function performs an operation and does not return a value.
  * @details
  */
-static void taskLauncher(
-    bzones::interfaces::ITask* _iTask);
-static void taskLauncher2(
-    bzones::interfaces::ITask* _iTask);
+static void blinkTask(
+    void* _params);
+
+static void serialTask(
+    void* _params);
 
 void setup(
     void)
@@ -39,24 +36,29 @@ void setup(
     while(!Serial);
 
     Serial.println("Starting...");
-    g_blinkTask.init();
     xTaskCreate(
-        taskLauncher,
+        blinkTask,
         "Blink",
         192,
-        &g_blinkTask,
+        nullptr,
         0,
         &g_blinkTaskHandler);
 
-    g_stationTask.init(
-        &g_stationTask);
     xTaskCreate(
-        taskLauncher,
-        "Station",
+        serialTask,
+        "Serial",
         192,
-        &g_stationTask,
+        nullptr,
         1,
-        &g_stationTaskHandler);
+        &g_serialTaskHandler);
+    
+    xTaskCreate(
+        serialTask,
+        "Other",
+        192,
+        nullptr,
+        2,
+        &g_serialTaskHandler2);
 }
 
 void loop(
@@ -64,14 +66,28 @@ void loop(
 {
 }
 
-void taskLauncher(
-    bzones::interfaces::ITask* _iTask)
+void blinkTask(
+    void* _params)
 {
-    _iTask->run();
+    pinMode(13, OUTPUT);
+    while(true)
+    {
+        digitalWrite(13, HIGH);
+        vTaskDelay(500 / portTICK_PERIOD_MS);
+        digitalWrite(13, LOW);
+        vTaskDelay(500 / portTICK_PERIOD_MS);
+    }
 }
 
-void taskLauncher2(
-    bzones::interfaces::ITask* _iTask)
+void serialTask(
+    void* _params)
 {
-    _iTask->run();
+    uint8_t i = 0;
+    while(true)
+    {
+        TaskHandle_t currTask = xTaskGetCurrentTaskHandle();
+        Serial.println(String(pcTaskGetName(currTask)) + " " + String(i));
+        i++;
+        vTaskDelay(1000 / portTICK_PERIOD_MS);
+    }
 }
