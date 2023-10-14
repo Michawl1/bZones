@@ -34,8 +34,8 @@ void NS::Blink::run(
     while(true)
     {
         digitalWrite(13, HIGH);
-        vTaskDelay(50);
+        vTaskDelay(500 / portTICK_PERIOD_MS);
         digitalWrite(13, LOW);
-        vTaskDelay(50);
+        vTaskDelay(500 / portTICK_PERIOD_MS);
     }
 }

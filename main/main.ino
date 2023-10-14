@@ -29,31 +29,34 @@ static TaskHandle_t g_stationTaskHandler;
  */
 static void taskLauncher(
     bzones::interfaces::ITask* _iTask);
+static void taskLauncher2(
+    bzones::interfaces::ITask* _iTask);
 
 void setup(
     void)
 {
-    g_blinkTask.init();
+    Serial.begin(9600);
+    while(!Serial);
 
+    Serial.println("Starting...");
+    g_blinkTask.init();
     xTaskCreate(
         taskLauncher,
         "Blink",
         192,
         &g_blinkTask,
-        1,
+        0,
         &g_blinkTaskHandler);
 
-    /*
     g_stationTask.init(
-        nullptr);
+        &g_stationTask);
     xTaskCreate(
         taskLauncher,
         "Station",
         192,
         &g_stationTask,
-        2,
+        1,
         &g_stationTaskHandler);
-        */
 }
 
 void loop(
@@ -62,6 +65,12 @@ void loop(
 }
 
 void taskLauncher(
+    bzones::interfaces::ITask* _iTask)
+{
+    _iTask->run();
+}
+
+void taskLauncher2(
     bzones::interfaces::ITask* _iTask)
 {
     _iTask->run();

@@ -41,6 +41,7 @@ void NS::bZoneStation::run(
 {
     while(true)
     {
-        vTaskDelay(10);
+        Serial.println("station");
+        vTaskDelay(10000 / portTICK_PERIOD_MS);
     }
 }

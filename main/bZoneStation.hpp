@@ -11,6 +11,7 @@
  */
 
 #include <Arduino_FreeRTOS.h>
+#include <Arduino.h>
 #include "interfaces/IBlockZone.hpp"
 #include "interfaces/ITask.hpp"
 
