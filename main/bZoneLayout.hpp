@@ -1,10 +1,10 @@
 /*
  *******************************************************************************
- * @file bZoneStation.hpp
+ * @file bZoneLayout.hpp
  * @author Michael Thompson (mthompsonkp11@gmail.com)
- * @date 13 October 2023
+ * @date 14 October 2023
  * 
- * @brief This file outlines a block zone task for a station.
+ * @brief This file outlines a block zone task for the layout.
  * @details
  * 
  *******************************************************************************
@@ -21,7 +21,7 @@ namespace bzones
 {
     namespace tasks
     {
-        class bZoneStation:
+        class bZoneLayout:
             public bzones::interfaces::ITask,
             public bzones::interfaces::IBlockZone
         {
@@ -53,7 +53,7 @@ namespace bzones
                  * a value.
                  * @details
                  */
-                bZoneStation(
+                bZoneLayout(
                     void);
 
                 /**

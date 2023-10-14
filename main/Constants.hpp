@@ -24,7 +24,8 @@ namespace bzones
         enum Priority : uint8_t
         {
             BLINK = 0,
-            STATION = 1
+            STATION = 1,
+            LAYOUT = 2,
         };
 
         /**
@@ -36,6 +37,16 @@ namespace bzones
          * @brief The size of the stack for the blink task.
          */
         const uint16_t BLINK_TASK_STACK_SIZE = 192;
+
+        /**
+         * @brief The name of the blink task.
+         */
+        const char* LAYOUT_TASK_NAME = "Layout";
+
+        /**
+         * @brief The size of the stack for the layout task.
+         */
+        const uint16_t LAYOUT_TASK_STACK_SIZE = 192;
 
         /**
          * @brief The name of the station task.

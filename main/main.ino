@@ -14,11 +14,14 @@
 #include <Arduino_FreeRTOS.h>
 #include "interfaces/ITask.hpp"
 #include "blink.hpp"
+#include "bZoneLayout.hpp"
 #include "bZoneStation.hpp"
 #include "Constants.hpp"
 
 static bzones::tasks::Blink g_blinkTask;
 static TaskHandle_t g_blinkTaskHandler;
+static bzones::tasks::bZoneLayout g_bZoneLayout;
+static TaskHandle_t g_bZoneLayoutTaskHandler;
 static bzones::tasks::bZoneStation g_bZoneStation;
 static TaskHandle_t g_bZoneStationTaskHandler;
 
@@ -51,8 +54,18 @@ void setup(
         CONSTANTS::Priority::BLINK,
         &g_blinkTaskHandler);
 
+    g_bZoneLayout.init(
+        &g_bZoneStation);
+    xTaskCreate(
+        taskLauncher,
+        CONSTANTS::LAYOUT_TASK_NAME,
+        CONSTANTS::LAYOUT_TASK_STACK_SIZE,
+        &g_bZoneLayout,
+        CONSTANTS::Priority::LAYOUT,
+        &g_bZoneLayoutTaskHandler);
+
     g_bZoneStation.init(
-        nullptr);
+        &g_bZoneLayout);
     xTaskCreate(
         taskLauncher,
         CONSTANTS::STATION_TASK_NAME,
