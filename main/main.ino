@@ -10,6 +10,7 @@
  * 
  *******************************************************************************
  */
+
 #include <Arduino_FreeRTOS.h>
 #include "interfaces/ITask.hpp"
 #include "blink.hpp"

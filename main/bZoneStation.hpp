@@ -13,6 +13,7 @@
 #include <Arduino.h>
 #include <Arduino_FreeRTOS.h>
 #include "interfaces/ITask.hpp"
+#include "interfaces/IBlockZone.hpp"
 
 #pragma once
 
@@ -21,7 +22,8 @@ namespace bzones
     namespace tasks
     {
         class bZoneStation:
-            public bzones::interfaces::ITask
+            public bzones::interfaces::ITask,
+            public bzones::interfaces::IBlockZone
         {
             private:
                 /**
@@ -60,6 +62,17 @@ namespace bzones
                  */
                 void init(
                     void);
+
+                /**
+                 * @brief Tells the user if this block zone is occupied.
+                 * @pre
+                 * @post
+                 * @return True if this block zone has a train in it, false
+                 * otherwise.
+                 * @details
+                 */
+                bool isOccupied(
+                    void) override;
 
                 /**
                  * @brief Runs this object's task.

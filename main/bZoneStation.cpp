@@ -28,6 +28,12 @@ void NS::bZoneStation::init(
     m_isInitialized = true;
 }
 
+bool NS::bZoneStation::isOccupied(
+    void)
+{
+    return false;
+}
+
 void NS::bZoneStation::run(
     void)
 {
