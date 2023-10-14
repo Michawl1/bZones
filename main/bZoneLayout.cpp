@@ -23,9 +23,11 @@ NS::bZoneLayout::bZoneLayout(
 }
 
 void NS::bZoneLayout::init(
-    bzones::interfaces::IBlockZone* _nextZone)
+    bzones::interfaces::IBlockZone* _nextZone,
+    Adafruit_PWMServoDriver* _motorDriver)
 {
     m_nextZone = _nextZone;
+    m_motorDriver = _motorDriver;
 
     m_isInitialized = true;
 }
@@ -41,18 +43,27 @@ void NS::bZoneLayout::run(
 {
     TaskHandle_t currTask = xTaskGetCurrentTaskHandle();
     Serial.println("Starting task: " + String(pcTaskGetName(currTask)));
+
+    bool toggle = true;
+
     while(true)
-    {        
-        if(m_isOccupied)
+    {
+        if(toggle)
         {
-            Serial.println("Train in: "+ String(pcTaskGetName(currTask)));
+            toggle = !toggle;
+            m_motorDriver->setPWM(
+                0,
+                0,
+                100);
         }
-
-        if(m_isOccupied && !m_nextZone->isOccupied())
+        else
         {
-            Serial.println("Next zone is open");
+            toggle = !toggle;
+            m_motorDriver->setPWM(
+                0,
+                0,
+                300);
         }
-
         vTaskDelay(1000 / portTICK_PERIOD_MS);
     }
 }

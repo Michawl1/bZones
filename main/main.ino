@@ -7,11 +7,13 @@
  * @brief This file outlines the main loop for the bZones project.
  * @details bZones is a block zones project for model roller coasters designed
  * to run on an Richard Barry's version of free rtos running on an arduino uno.
- * 
+ * @note Requires 'FreeRtos' by Richard Barry v 10.5.1
+ *       Requires 'Adafruit PWM Servo Driver Libary' by Adafruit v 3.0.1
  *******************************************************************************
  */
 
 #include <Arduino_FreeRTOS.h>
+#include <Adafruit_PWMServoDriver.h>
 #include "interfaces/ITask.hpp"
 #include "blink.hpp"
 #include "bZoneLayout.hpp"
@@ -24,6 +26,7 @@ static bzones::tasks::bZoneLayout g_bZoneLayout;
 static TaskHandle_t g_bZoneLayoutTaskHandler;
 static bzones::tasks::bZoneStation g_bZoneStation;
 static TaskHandle_t g_bZoneStationTaskHandler;
+static Adafruit_PWMServoDriver g_motorDriver;
 
 namespace CONSTANTS = bzones::constants;
 
@@ -43,6 +46,10 @@ void setup(
     Serial.begin(9600);
     while(!Serial);
 
+    g_motorDriver.begin();
+    g_motorDriver.setOscillatorFrequency(25000000);
+    g_motorDriver.setPWMFreq(50);
+
     Serial.println("Starting...");
 
     g_blinkTask.init();
@@ -55,7 +62,8 @@ void setup(
         &g_blinkTaskHandler);
 
     g_bZoneLayout.init(
-        &g_bZoneStation);
+        &g_bZoneStation,
+        &g_motorDriver);
     xTaskCreate(
         taskLauncher,
         CONSTANTS::LAYOUT_TASK_NAME,
@@ -65,7 +73,8 @@ void setup(
         &g_bZoneLayoutTaskHandler);
 
     g_bZoneStation.init(
-        &g_bZoneLayout);
+        &g_bZoneLayout,
+        &g_motorDriver);
     xTaskCreate(
         taskLauncher,
         CONSTANTS::STATION_TASK_NAME,

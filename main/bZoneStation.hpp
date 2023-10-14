@@ -12,6 +12,7 @@
 
 #include <Arduino.h>
 #include <Arduino_FreeRTOS.h>
+#include <Adafruit_PWMServoDriver.h>
 #include "interfaces/ITask.hpp"
 #include "interfaces/IBlockZone.hpp"
 
@@ -39,6 +40,12 @@ namespace bzones
                 bool m_isOccupied;
 
                 /**
+                 * @brief The motor driver used to control all motors on the
+                 * system.
+                 */
+                Adafruit_PWMServoDriver* m_motorDriver;
+
+                /**
                  * @brief A pointer to the next block zone used to know if this
                  * one is clear or not.
                  */
@@ -60,14 +67,17 @@ namespace bzones
                  * @brief Initializes this object.
                  * @pre
                  * @post
-                 * @param[in] The next block zone, used to know if it is safe to
-                 * dispatch.
+                 * @param[in] _nextZone The next block zone, used to know if it 
+                 * is safe to dispatch.
+                 * @param[in] _motorDriver The motor driver used to control all
+                 * motors on the system.
                  * @return This method performs an operation and does not return
                  * a value.
                  * @details
                  */
                 void init(
-                    bzones::interfaces::IBlockZone* _nextZone);
+                    bzones::interfaces::IBlockZone* _nextZone,
+                    Adafruit_PWMServoDriver* _motorDriver);
 
                 /**
                  * @brief Tells the user if this block zone is occupied.
