@@ -40,11 +40,19 @@ namespace CONSTANTS = bzones::constants;
 static void taskLauncher(
     void* _param);
 
+void tempInterrupt()
+{
+    Serial.println("Interrupt!");
+}
+
 void setup(
     void)
 {
     Serial.begin(9600);
     while(!Serial);
+
+    pinMode(2, INPUT_PULLUP);
+    attachInterrupt(digitalPinToInterrupt(2), tempInterrupt, FALLING);
 
     g_motorDriver.begin();
     g_motorDriver.setOscillatorFrequency(25000000);
