@@ -31,6 +31,26 @@ static Adafruit_PWMServoDriver g_motorDriver;
 namespace CONSTANTS = bzones::constants;
 
 /**
+ * @brief The interrupt triggered on pins 8-13.
+ * @pre
+ * @post
+ * @return This function performs an operation and does not return a value.
+ * @details
+ */
+void portBChangeInterrupt(
+    void);
+    
+/**
+ * @brief The interrupt triggered on pins 0-7.
+ * @pre
+ * @post
+ * @return This function performs an operation and does not return a value.
+ * @details
+ */
+void portDChangeInpterrupt(
+    void);
+
+/**
  * @brief Generically launches a task.
  * @pre
  * @post
@@ -40,19 +60,18 @@ namespace CONSTANTS = bzones::constants;
 static void taskLauncher(
     void* _param);
 
-void tempInterrupt()
-{
-    Serial.println("Interrupt!");
-}
-
 void setup(
     void)
 {
     Serial.begin(9600);
     while(!Serial);
 
-    pinMode(2, INPUT_PULLUP);
-    attachInterrupt(digitalPinToInterrupt(2), tempInterrupt, FALLING);
+    for(uint8_t i = 0; i < 14; i++)
+    {
+        pinMode(i, INPUT_PULLUP);
+    }
+    attachInterrupt(digitalPinToInterrupt(0), portDChangeInpterrupt, CHANGE);
+    attachInterrupt(digitalPinToInterrupt(8), portBChangeInpterrupt, CHANGE);
 
     g_motorDriver.begin();
     g_motorDriver.setOscillatorFrequency(25000000);
@@ -102,4 +121,134 @@ void taskLauncher(
 {
     bzones::interfaces::ITask* instance = reinterpret_cast<bzones::interfaces::ITask*>(_param);
     instance->run();
+}
+
+void portBChangeInpterrupt(
+    void)
+{
+    uint8_t portBState = PINB;
+    
+    // Assuming only one sensor triggers at a time...
+    switch(portBState)
+    {
+        case 0:
+        {
+
+        }
+        break;
+
+        // Pin 8
+        case 1:
+        {
+
+        }
+        break;
+
+        // Pin 9
+        case 2:
+        {
+
+        }
+        break;
+
+        // Pin 10
+        case 4:
+        {
+
+        }
+        break;
+
+        // Pin 11
+        case 8:
+        {
+
+        }
+        break;
+
+        // Pin 12
+        case 16:
+        {
+
+        }
+        break;
+
+        // Pin 13
+        case 32:
+        {
+
+        }
+        break;
+    }
+}
+
+void portDChangeInpterrupt(
+    void)
+{
+    uint8_t portDState = PIND;
+
+    // Assuming only one sensor triggers at a time...
+    switch(portDState)
+    {
+        case 0:
+        {
+
+        }
+        break;
+
+        // Pin 0
+        case 1:
+        {
+
+        }
+        break;
+
+        // Pin 1
+        case 2:
+        {
+
+        }
+        break;
+
+        // Pin 2
+        case 4:
+        {
+
+        }
+        break;
+
+        // Pin 3
+        case 8:
+        {
+
+        }
+        break;
+
+        // Pin 4
+        case 16:
+        {
+
+        }
+        break;
+
+        // Pin 5
+        case 32:
+        {
+
+        }
+        break;
+
+        // Pin 6
+        case 64:
+        {
+
+        }
+        break;
+
+        // Pin 7
+        case 128:
+        {
+
+        }
+        break;
+    }
 }
