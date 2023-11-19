@@ -40,7 +40,7 @@ namespace bzones
                  * otherwise.
                  * @details
                  */
-                virtual void PinEvent(
+                virtual void pinEvent(
                     uint8_t _pin,
                     uint8_t _state) = 0;
         };

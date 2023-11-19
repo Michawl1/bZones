@@ -60,6 +60,16 @@ namespace bzones
         const uint16_t LAYOUT_TASK_STACK_SIZE = 64;
 
         /**
+         * @brief The name of the lift hill task.
+         */
+        const char* LIFT_HILL_READER_TASK_NAME = "LiftHil";
+
+        /**
+         * @brief The stack size for the lift hill task.
+         */
+        const uint16_t LIFT_HILL_READER_TASK_STACK_SIZE = 64;
+
+        /**
          * @brief The name of the station task.
          */
         const char* STATION_TASK_NAME = "Station";

@@ -14,9 +14,11 @@
 
 #include <Arduino_FreeRTOS.h>
 #include <Adafruit_PWMServoDriver.h>
+#include "interfaces/IPinEvent.hpp"
 #include "interfaces/ITask.hpp"
 #include "blink.hpp"
 #include "bZoneLayout.hpp"
+#include "bZoneLiftHill.hpp"
 #include "bZoneStation.hpp"
 #include "Constants.hpp"
 #include "halReaderTask.hpp"
@@ -27,12 +29,44 @@ static bzones::tasks::Blink g_blinkTask;
 static TaskHandle_t g_blinkTaskHandler;
 static bzones::tasks::bZoneLayout g_bZoneLayout;
 static TaskHandle_t g_bZoneLayoutTaskHandler;
+static bzones::tasks::bZoneLiftHill g_bZoneLiftHill;
+static TaskHandle_t g_bZoneLiftHillTaskHandler;
 static bzones::tasks::bZoneStation g_bZoneStation;
 static TaskHandle_t g_bZoneStationTaskHandler;
 static bzones::tasks::HalReaderTask g_halReaderTask;
 static TaskHandle_t g_halReaderTaskHandler;
 static Adafruit_PWMServoDriver g_motorDriver;
 static uint8_t g_pinEventsSize[13] = {0,0,0,0,0,0,0,0,0,0,0,0,0};
+
+static bzones::interfaces::IPinEvent* g_pin0Events[0];
+static bzones::interfaces::IPinEvent* g_pin1Events[0];
+static bzones::interfaces::IPinEvent* g_pin2Events[0];
+static bzones::interfaces::IPinEvent* g_pin3Events[0];
+static bzones::interfaces::IPinEvent* g_pin4Events[0];
+static bzones::interfaces::IPinEvent* g_pin5Events[0];
+static bzones::interfaces::IPinEvent* g_pin6Events[0];
+static bzones::interfaces::IPinEvent* g_pin7Events[0];
+static bzones::interfaces::IPinEvent* g_pin8Events[0];
+static bzones::interfaces::IPinEvent* g_pin9Events[0];
+static bzones::interfaces::IPinEvent* g_pin10Events[0];
+static bzones::interfaces::IPinEvent* g_pin11Events[0];
+static bzones::interfaces::IPinEvent* g_pin12Events[0];
+static bzones::interfaces::IPinEvent* g_pin13Events[0];
+static bzones::interfaces::IPinEvent** g_pinEvents[] = {
+    g_pin0Events,
+    g_pin1Events,
+    g_pin2Events,
+    g_pin3Events,
+    g_pin4Events,
+    g_pin5Events,
+    g_pin6Events,
+    g_pin7Events,
+    g_pin8Events,
+    g_pin9Events,
+    g_pin10Events,
+    g_pin11Events,
+    g_pin12Events,
+    g_pin13Events};
 
 namespace CONSTANTS = bzones::constants;
 
@@ -104,9 +138,20 @@ void setup(
         &g_bZoneLayout,
         CONSTANTS::Priority::LAYOUT,
         &g_bZoneLayoutTaskHandler);
+
+    g_bZoneLiftHill.init(
+        &g_bZoneLayout,
+        &g_motorDriver);
+    xTaskCreate(
+        taskLauncher,
+        CONSTANTS::LIFT_HILL_READER_TASK_NAME,
+        CONSTANTS::LIFT_HILL_READER_TASK_STACK_SIZE,
+        &g_bZoneLiftHill,
+        CONSTANTS::Priority::LAYOUT,
+        &g_bZoneLiftHillTaskHandler);
     
     g_bZoneStation.init(
-        &g_bZoneLayout,
+        &g_bZoneLiftHill,
         &g_motorDriver);
     xTaskCreate(
         taskLauncher,
@@ -119,7 +164,7 @@ void setup(
     g_halReaderTask.init(
         0b00000011,
         0b11111111,
-        nullptr,
+        g_pinEvents,
         g_pinEventsSize);
     xTaskCreate(
         taskLauncher,

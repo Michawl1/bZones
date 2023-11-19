@@ -57,7 +57,7 @@ namespace bzones
                  * @brief A 2 array of events to call when pin 0 changes state.
                  * Where m_pinEvents[0] is all of the pin events for pin 0 etc.
                  */
-                bzones::interfaces::IPinEvent** m_pinEvents;
+                bzones::interfaces::IPinEvent*** m_pinEvents;
 
                 /**
                  * @brief The size of each sub array within @m_pinEvents.
@@ -96,7 +96,7 @@ namespace bzones
                 void init(
                     uint8_t _portBInputMask,
                     uint8_t _portDInputMask,
-                    bzones::interfaces::IPinEvent** _pinEvents,
+                    bzones::interfaces::IPinEvent*** _pinEvents,
                     uint8_t* _pinEventsSize);
 
                 /**
