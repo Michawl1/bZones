@@ -69,7 +69,9 @@ void NS::HalReaderTask::run(
                 {
                     for(i = 0; i < m_pinEventsSize[8]; i++)
                     {
-                        m_pinEvents[8][i].PinEvent(portB & 0x01);
+                        m_pinEvents[8][i].PinEvent(
+                            8,
+                            portB & 0x01);
                     }
                     Serial.println("Pin 8");
                 }
@@ -79,7 +81,9 @@ void NS::HalReaderTask::run(
                 {
                     for(i = 0; i < m_pinEventsSize[9]; i++)
                     {
-                        m_pinEvents[9][i].PinEvent(portB & 0x02);
+                        m_pinEvents[9][i].PinEvent(
+                            9,
+                            portB & 0x02);
                     }
                     Serial.println("Pin 9");
                 }
@@ -89,7 +93,9 @@ void NS::HalReaderTask::run(
                 {
                     for(i = 0; i < m_pinEventsSize[10]; i++)
                     {
-                        m_pinEvents[10][i].PinEvent(portB & 0x04);
+                        m_pinEvents[10][i].PinEvent(
+                            10,
+                            portB & 0x04);
                     }
                     Serial.println("Pin 10");
                 }
@@ -99,7 +105,9 @@ void NS::HalReaderTask::run(
                 {
                     for(i = 0; i < m_pinEventsSize[11]; i++)
                     {
-                        m_pinEvents[11][i].PinEvent(portB & 0x08);
+                        m_pinEvents[11][i].PinEvent(
+                            11,
+                            portB & 0x08);
                     }
                     Serial.println("Pin 11");
                 }
@@ -109,7 +117,9 @@ void NS::HalReaderTask::run(
                 {
                     for(i = 0; i < m_pinEventsSize[12]; i++)
                     {
-                        m_pinEvents[12][i].PinEvent(portB & 0x10);
+                        m_pinEvents[12][i].PinEvent(
+                            12,
+                            portB & 0x10);
                     }
                     Serial.println("Pin 12");
                 }
@@ -119,7 +129,9 @@ void NS::HalReaderTask::run(
                 {
                     for(i = 0; i < m_pinEventsSize[13]; i++)
                     {
-                        m_pinEvents[13][i].PinEvent(portB & 0x20);
+                        m_pinEvents[13][i].PinEvent(
+                            13,
+                            portB & 0x20);
                     }
                     Serial.println("Pin 13");
                 }
@@ -137,7 +149,9 @@ void NS::HalReaderTask::run(
                 {
                     for(i = 0; i < m_pinEventsSize[0]; i++)
                     {
-                        m_pinEvents[0][i].PinEvent(portD & 0x01);
+                        m_pinEvents[0][i].PinEvent(
+                            0,
+                            portD & 0x01);
                     }
                     Serial.println("Pin 0");
                 }
@@ -147,7 +161,9 @@ void NS::HalReaderTask::run(
                 {
                     for(i = 0; i < m_pinEventsSize[1]; i++)
                     {
-                        m_pinEvents[1][i].PinEvent(portD & 0x02);
+                        m_pinEvents[1][i].PinEvent(
+                            1,
+                            portD & 0x02);
                     }
                     Serial.println("Pin 1");
                 }
@@ -157,7 +173,9 @@ void NS::HalReaderTask::run(
                 {
                     for(i = 0; i < m_pinEventsSize[2]; i++)
                     {
-                        m_pinEvents[2][i].PinEvent(portD & 0x04);
+                        m_pinEvents[2][i].PinEvent(
+                            2,
+                            portD & 0x04);
                     }
                     Serial.println("Pin 2");
                 }
@@ -167,7 +185,9 @@ void NS::HalReaderTask::run(
                 {
                     for(i = 0; i < m_pinEventsSize[3]; i++)
                     {
-                        m_pinEvents[3][i].PinEvent(portD & 0x08);
+                        m_pinEvents[3][i].PinEvent(
+                            3,
+                            portD & 0x08);
                     }
                     Serial.println("Pin 3");
                 }
@@ -177,7 +197,9 @@ void NS::HalReaderTask::run(
                 {
                     for(i = 0; i < m_pinEventsSize[4]; i++)
                     {
-                        m_pinEvents[4][i].PinEvent(portD & 0x10);
+                        m_pinEvents[4][i].PinEvent(
+                            4,
+                            portD & 0x10);
                     }
                     Serial.println("Pin 4");
                 }
@@ -187,7 +209,9 @@ void NS::HalReaderTask::run(
                 {
                     for(i = 0; i < m_pinEventsSize[5]; i++)
                     {
-                        m_pinEvents[5][i].PinEvent(portD & 0x20);
+                        m_pinEvents[5][i].PinEvent(
+                            5,
+                            portD & 0x20);
                     }
                     Serial.println("Pin 5");
                 }
@@ -197,7 +221,9 @@ void NS::HalReaderTask::run(
                 {
                     for(i = 0; i < m_pinEventsSize[6]; i++)
                     {
-                        m_pinEvents[6][i].PinEvent(portD & 0x40);
+                        m_pinEvents[6][i].PinEvent(
+                            6,
+                            portD & 0x40);
                     }
                     Serial.println("Pin 6");
                 }
@@ -207,7 +233,9 @@ void NS::HalReaderTask::run(
                 {
                     for(i = 0; i < m_pinEventsSize[7]; i++)
                     {
-                        m_pinEvents[7][i].PinEvent(portD & 0x80);
+                        m_pinEvents[7][i].PinEvent(
+                            7,
+                            portD & 0x80);
                     }
                     Serial.println("Pin 7");
                 }

@@ -33,12 +33,15 @@ namespace bzones
                  * @brief Tells the user if that a pin event occurred.
                  * @pre
                  * @post
+                 * @param[in] _pin The number of the pin that the event occurred
+                 * for.
                  * @param[in] _state The state of the pin 0 is low, 1 is high.
                  * @return True if this block zone has a train in it, false
                  * otherwise.
                  * @details
                  */
                 virtual void PinEvent(
+                    uint8_t _pin,
                     uint8_t _state) = 0;
         };
     } // namespace interfaces
