@@ -10,8 +10,8 @@
  *******************************************************************************
  */
 
-#include <Arduino.h>
 #include <Arduino_FreeRTOS.h>
+#include <Arduino.h>
 #include <Adafruit_PWMServoDriver.h>
 #include "interfaces/ITask.hpp"
 #include "interfaces/IBlockZone.hpp"

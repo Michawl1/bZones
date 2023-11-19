@@ -26,6 +26,7 @@ namespace bzones
             BLINK = 0,
             STATION = 1,
             LAYOUT = 2,
+            HAL_READER = 3,
         };
 
         /**
@@ -36,7 +37,17 @@ namespace bzones
         /**
          * @brief The size of the stack for the blink task.
          */
-        const uint16_t BLINK_TASK_STACK_SIZE = 192;
+        const uint16_t BLINK_TASK_STACK_SIZE = 78;
+
+        /**
+         * @brief The name of the hal reader task.
+         */
+        const char* HAL_READER_TASK_NAME = "HalRead";
+
+        /**
+         * @brief The stack size for the hal reader task.
+         */
+        const uint16_t HAL_READER_TASK_STACK_SIZE = 64;
 
         /**
          * @brief The name of the blink task.
@@ -46,7 +57,7 @@ namespace bzones
         /**
          * @brief The size of the stack for the layout task.
          */
-        const uint16_t LAYOUT_TASK_STACK_SIZE = 192;
+        const uint16_t LAYOUT_TASK_STACK_SIZE = 64;
 
         /**
          * @brief The name of the station task.
@@ -56,6 +67,7 @@ namespace bzones
         /**
          * @brief The size of the stack for the station task.
          */
-        const uint16_t STATION_TASK_STACK_SIZE = 192;
+        const uint16_t STATION_TASK_STACK_SIZE = 64;
+
     } // namespace contants
 } // namespace bzones

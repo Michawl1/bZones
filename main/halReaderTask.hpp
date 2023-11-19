@@ -1,10 +1,11 @@
 /*
  *******************************************************************************
- * @file bZoneLayout.hpp
+ * @file HalReaderTask.hpp
  * @author Michael Thompson (mthompsonkp11@gmail.com)
- * @date 14 October 2023
+ * @date 18 November 2023
  * 
- * @brief This file outlines a block zone task for the layout.
+ * @brief This file defines a concrete task that reads all of the gpio pins 
+ * where hal effect sensors are connected to.
  * @details
  * 
  *******************************************************************************
@@ -12,9 +13,7 @@
 
 #include <Arduino_FreeRTOS.h>
 #include <Arduino.h>
-#include <Adafruit_PWMServoDriver.h>
 #include "interfaces/ITask.hpp"
-#include "interfaces/IBlockZone.hpp"
 
 #pragma once
 
@@ -22,9 +21,7 @@ namespace bzones
 {
     namespace tasks
     {
-        class bZoneLayout:
-            public bzones::interfaces::ITask,
-            public bzones::interfaces::IBlockZone
+        class HalReaderTask: public bzones::interfaces::ITask
         {
             private:
                 /**
@@ -34,22 +31,26 @@ namespace bzones
                 bool m_isInitialized;
 
                 /**
-                 * @brief A flag that keeps track of if this block zone is
-                 * occupied.
+                 * @brief The pins to monitor on port B for changes.
                  */
-                bool m_isOccupied;
+                uint8_t m_portBInputMask;
 
                 /**
-                 * @brief The motor driver used to control all motors on the
-                 * system.
+                 * @brief The pins to monitor on port D for changes.
                  */
-                Adafruit_PWMServoDriver* m_motorDriver;
+                uint8_t m_portDInputMask;
 
                 /**
-                 * @brief A pointer to the next block zone used to know if this
-                 * one is clear or not.
+                 * @brief The previous state of the port B input staus
+                 * register.
                  */
-                bzones::interfaces::IBlockZone* m_nextZone;
+                uint8_t m_prevBState;
+
+                /**
+                 * @brief The previous state of the port D input status 
+                 * register.
+                 */
+                uint8_t m_prevDState;
             
             public:
                 /**
@@ -60,35 +61,24 @@ namespace bzones
                  * a value.
                  * @details
                  */
-                bZoneLayout(
+                HalReaderTask(
                     void);
 
                 /**
                  * @brief Initializes this object.
                  * @pre
                  * @post
-                 * @param[in] _nextZone The next block zone, used to know if it 
-                 * is safe to dispatch.
-                 * @param[in] _motorDriver The motor driver used to control all
-                 * motors on the system.
+                 * @param[in] _portBInputMask The pins to monitor on port B for 
+                 * changes.
+                 * @param[in] _portDInputMask The pins to monitor on port D for 
+                 * changes.
                  * @return This method performs an operation and does not return
                  * a value.
                  * @details
                  */
                 void init(
-                    bzones::interfaces::IBlockZone* _nextZone,
-                    Adafruit_PWMServoDriver* _motorDriver);
-
-                /**
-                 * @brief Tells the user if this block zone is occupied.
-                 * @pre
-                 * @post
-                 * @return True if this block zone has a train in it, false
-                 * otherwise.
-                 * @details
-                 */
-                bool isOccupied(
-                    void) override;
+                    uint8_t _portBInputMask,
+                    uint8_t _portDInputMask);
 
                 /**
                  * @brief Runs this object's task.

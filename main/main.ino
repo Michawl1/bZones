@@ -19,6 +19,9 @@
 #include "bZoneLayout.hpp"
 #include "bZoneStation.hpp"
 #include "Constants.hpp"
+#include "halReaderTask.hpp"
+
+#define configMINIMAL_STACK_SIZE    ((unsigned short)64)
 
 static bzones::tasks::Blink g_blinkTask;
 static TaskHandle_t g_blinkTaskHandler;
@@ -26,6 +29,8 @@ static bzones::tasks::bZoneLayout g_bZoneLayout;
 static TaskHandle_t g_bZoneLayoutTaskHandler;
 static bzones::tasks::bZoneStation g_bZoneStation;
 static TaskHandle_t g_bZoneStationTaskHandler;
+static bzones::tasks::HalReaderTask g_halReaderTask;
+static TaskHandle_t g_halReaderTaskHandler;
 static Adafruit_PWMServoDriver g_motorDriver;
 
 namespace CONSTANTS = bzones::constants;
@@ -66,12 +71,12 @@ void setup(
     Serial.begin(9600);
     while(!Serial);
 
-    for(uint8_t i = 0; i < 14; i++)
+    pinMode(13, OUTPUT);
+
+    for(uint8_t i = 0; i < 13; i++)
     {
         pinMode(i, INPUT_PULLUP);
     }
-    attachInterrupt(digitalPinToInterrupt(0), portDChangeInpterrupt, CHANGE);
-    attachInterrupt(digitalPinToInterrupt(8), portBChangeInpterrupt, CHANGE);
 
     g_motorDriver.begin();
     g_motorDriver.setOscillatorFrequency(25000000);
@@ -87,7 +92,7 @@ void setup(
         &g_blinkTask,
         CONSTANTS::Priority::BLINK,
         &g_blinkTaskHandler);
-
+        
     g_bZoneLayout.init(
         &g_bZoneStation,
         &g_motorDriver);
@@ -98,7 +103,7 @@ void setup(
         &g_bZoneLayout,
         CONSTANTS::Priority::LAYOUT,
         &g_bZoneLayoutTaskHandler);
-
+    
     g_bZoneStation.init(
         &g_bZoneLayout,
         &g_motorDriver);
@@ -109,6 +114,17 @@ void setup(
         &g_bZoneStation,
         CONSTANTS::Priority::STATION,
         &g_bZoneStationTaskHandler);
+
+    g_halReaderTask.init(
+        0b00000011,
+        0b11111111);
+    xTaskCreate(
+        taskLauncher,
+        CONSTANTS::HAL_READER_TASK_NAME,
+        CONSTANTS::HAL_READER_TASK_STACK_SIZE,
+        &g_halReaderTask,
+        CONSTANTS::Priority::HAL_READER,
+        &g_halReaderTaskHandler);
 }
 
 void loop(
@@ -121,134 +137,4 @@ void taskLauncher(
 {
     bzones::interfaces::ITask* instance = reinterpret_cast<bzones::interfaces::ITask*>(_param);
     instance->run();
-}
-
-void portBChangeInpterrupt(
-    void)
-{
-    uint8_t portBState = PINB;
-    
-    // Assuming only one sensor triggers at a time...
-    switch(portBState)
-    {
-        case 0:
-        {
-
-        }
-        break;
-
-        // Pin 8
-        case 1:
-        {
-
-        }
-        break;
-
-        // Pin 9
-        case 2:
-        {
-
-        }
-        break;
-
-        // Pin 10
-        case 4:
-        {
-
-        }
-        break;
-
-        // Pin 11
-        case 8:
-        {
-
-        }
-        break;
-
-        // Pin 12
-        case 16:
-        {
-
-        }
-        break;
-
-        // Pin 13
-        case 32:
-        {
-
-        }
-        break;
-    }
-}
-
-void portDChangeInpterrupt(
-    void)
-{
-    uint8_t portDState = PIND;
-
-    // Assuming only one sensor triggers at a time...
-    switch(portDState)
-    {
-        case 0:
-        {
-
-        }
-        break;
-
-        // Pin 0
-        case 1:
-        {
-
-        }
-        break;
-
-        // Pin 1
-        case 2:
-        {
-
-        }
-        break;
-
-        // Pin 2
-        case 4:
-        {
-
-        }
-        break;
-
-        // Pin 3
-        case 8:
-        {
-
-        }
-        break;
-
-        // Pin 4
-        case 16:
-        {
-
-        }
-        break;
-
-        // Pin 5
-        case 32:
-        {
-
-        }
-        break;
-
-        // Pin 6
-        case 64:
-        {
-
-        }
-        break;
-
-        // Pin 7
-        case 128:
-        {
-
-        }
-        break;
-    }
 }
