@@ -21,7 +21,7 @@
 #include "Constants.hpp"
 #include "halReaderTask.hpp"
 
-#define configMINIMAL_STACK_SIZE    ((unsigned short)64)
+#define configMINIMAL_STACK_SIZE    ((unsigned short)32)
 
 static bzones::tasks::Blink g_blinkTask;
 static TaskHandle_t g_blinkTaskHandler;
@@ -32,6 +32,7 @@ static TaskHandle_t g_bZoneStationTaskHandler;
 static bzones::tasks::HalReaderTask g_halReaderTask;
 static TaskHandle_t g_halReaderTaskHandler;
 static Adafruit_PWMServoDriver g_motorDriver;
+static uint8_t g_pinEventsSize[13] = {0,0,0,0,0,0,0,0,0,0,0,0,0};
 
 namespace CONSTANTS = bzones::constants;
 
@@ -117,7 +118,9 @@ void setup(
 
     g_halReaderTask.init(
         0b00000011,
-        0b11111111);
+        0b11111111,
+        nullptr,
+        g_pinEventsSize);
     xTaskCreate(
         taskLauncher,
         CONSTANTS::HAL_READER_TASK_NAME,

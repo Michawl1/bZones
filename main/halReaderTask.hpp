@@ -14,6 +14,7 @@
 #include <Arduino_FreeRTOS.h>
 #include <Arduino.h>
 #include "interfaces/ITask.hpp"
+#include "interfaces/IPinEvent.hpp"
 
 #pragma once
 
@@ -51,6 +52,17 @@ namespace bzones
                  * register.
                  */
                 uint8_t m_prevDState;
+
+                /**
+                 * @brief A 2 array of events to call when pin 0 changes state.
+                 * Where m_pinEvents[0] is all of the pin events for pin 0 etc.
+                 */
+                bzones::interfaces::IPinEvent** m_pinEvents;
+
+                /**
+                 * @brief The size of each sub array within @m_pinEvents.
+                 */
+                uint8_t* m_pinEventsSize;
             
             public:
                 /**
@@ -72,13 +84,20 @@ namespace bzones
                  * changes.
                  * @param[in] _portDInputMask The pins to monitor on port D for 
                  * changes.
+                 * @param[in] _pinEvents A 2 array of events to call when pin 0 
+                 * changes state. Where m_pinEvents[0] is all of the pin events 
+                 * for pin 0 etc.
+                 * @param[in] _pinEventsSize The size of each sub array within 
+                 * @m_pinEvents.
                  * @return This method performs an operation and does not return
                  * a value.
                  * @details
                  */
                 void init(
                     uint8_t _portBInputMask,
-                    uint8_t _portDInputMask);
+                    uint8_t _portDInputMask,
+                    bzones::interfaces::IPinEvent** _pinEvents,
+                    uint8_t* _pinEventsSize);
 
                 /**
                  * @brief Runs this object's task.

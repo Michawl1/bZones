@@ -47,7 +47,7 @@ namespace bzones
         /**
          * @brief The stack size for the hal reader task.
          */
-        const uint16_t HAL_READER_TASK_STACK_SIZE = 64;
+        const uint16_t HAL_READER_TASK_STACK_SIZE = 56;
 
         /**
          * @brief The name of the blink task.

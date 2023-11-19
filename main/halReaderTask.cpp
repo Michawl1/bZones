@@ -23,17 +23,23 @@ NS::HalReaderTask::HalReaderTask(
   m_portBInputMask(0),
   m_portDInputMask(0),
   m_prevBState(0),
-  m_prevDState(0)
+  m_prevDState(0),
+  m_pinEvents(nullptr),
+  m_pinEventsSize{nullptr}
 {
 
 }
 
 void NS::HalReaderTask::init(
     uint8_t _portBInputMask,
-    uint8_t _portDInputMask)
+    uint8_t _portDInputMask,
+    bzones::interfaces::IPinEvent** _pinEvents,
+    uint8_t* _pinEventsSize)
 {
     m_portBInputMask = _portBInputMask;
     m_portDInputMask = _portDInputMask;
+    m_pinEvents = _pinEvents;
+    m_pinEventsSize = _pinEventsSize;
 
     m_isInitialized = true;
 }
@@ -46,6 +52,7 @@ void NS::HalReaderTask::run(
 
     uint8_t portB = 0;
     uint8_t portD = 0;
+    uint8_t i = 0;
 
     while(true)
     {
@@ -58,51 +65,63 @@ void NS::HalReaderTask::run(
         {
             switch(portB ^ m_prevBState)
             {
-                case 1:
+                case 0x01:
                 {
+                    for(i = 0; i < m_pinEventsSize[8]; i++)
+                    {
+                        m_pinEvents[8][i].PinEvent(portB & 0x01);
+                    }
                     Serial.println("Pin 8");
                 }
                 break;
 
-                case 2:
+                case 0x02:
                 {
+                    for(i = 0; i < m_pinEventsSize[9]; i++)
+                    {
+                        m_pinEvents[9][i].PinEvent(portB & 0x02);
+                    }
                     Serial.println("Pin 9");
                 }
                 break;
                 
-                case 4:
+                case 0x04:
                 {
+                    for(i = 0; i < m_pinEventsSize[10]; i++)
+                    {
+                        m_pinEvents[10][i].PinEvent(portB & 0x04);
+                    }
                     Serial.println("Pin 10");
                 }
                 break;
                 
-                case 8:
+                case 0x08:
                 {
+                    for(i = 0; i < m_pinEventsSize[11]; i++)
+                    {
+                        m_pinEvents[11][i].PinEvent(portB & 0x08);
+                    }
                     Serial.println("Pin 11");
                 }
                 break;
                 
-                case 16:
+                case 0x10:
                 {
+                    for(i = 0; i < m_pinEventsSize[12]; i++)
+                    {
+                        m_pinEvents[12][i].PinEvent(portB & 0x10);
+                    }
                     Serial.println("Pin 12");
                 }
                 break;
                 
-                case 32:
+                case 0x20:
                 {
+                    for(i = 0; i < m_pinEventsSize[13]; i++)
+                    {
+                        m_pinEvents[13][i].PinEvent(portB & 0x20);
+                    }
                     Serial.println("Pin 13");
-                }
-                break;
-                
-                case 64:
-                {
-
-                }
-                break;
-                
-                case 128:
-                {
-
                 }
                 break;
             }
@@ -114,50 +133,82 @@ void NS::HalReaderTask::run(
         {            
             switch(portD ^ m_prevDState)
             {
-                case 1:
+                case 0x01:
                 {
+                    for(i = 0; i < m_pinEventsSize[0]; i++)
+                    {
+                        m_pinEvents[0][i].PinEvent(portD & 0x01);
+                    }
                     Serial.println("Pin 0");
                 }
                 break;
 
-                case 2:
+                case 0x02:
                 {
+                    for(i = 0; i < m_pinEventsSize[1]; i++)
+                    {
+                        m_pinEvents[1][i].PinEvent(portD & 0x02);
+                    }
                     Serial.println("Pin 1");
                 }
                 break;
                 
-                case 4:
+                case 0x04:
                 {
+                    for(i = 0; i < m_pinEventsSize[2]; i++)
+                    {
+                        m_pinEvents[2][i].PinEvent(portD & 0x04);
+                    }
                     Serial.println("Pin 2");
                 }
                 break;
                 
-                case 8:
+                case 0x08:
                 {
+                    for(i = 0; i < m_pinEventsSize[3]; i++)
+                    {
+                        m_pinEvents[3][i].PinEvent(portD & 0x08);
+                    }
                     Serial.println("Pin 3");
                 }
                 break;
                 
-                case 16:
+                case 0x10:
                 {
+                    for(i = 0; i < m_pinEventsSize[4]; i++)
+                    {
+                        m_pinEvents[4][i].PinEvent(portD & 0x10);
+                    }
                     Serial.println("Pin 4");
                 }
                 break;
                 
-                case 32:
+                case 0x20:
                 {
+                    for(i = 0; i < m_pinEventsSize[5]; i++)
+                    {
+                        m_pinEvents[5][i].PinEvent(portD & 0x20);
+                    }
                     Serial.println("Pin 5");
                 }
                 break;
                 
-                case 64:
+                case 0x40:
                 {
+                    for(i = 0; i < m_pinEventsSize[6]; i++)
+                    {
+                        m_pinEvents[6][i].PinEvent(portD & 0x40);
+                    }
                     Serial.println("Pin 6");
                 }
                 break;
                 
-                case 128:
+                case 0x80:
                 {
+                    for(i = 0; i < m_pinEventsSize[7]; i++)
+                    {
+                        m_pinEvents[7][i].PinEvent(portD & 0x80);
+                    }
                     Serial.println("Pin 7");
                 }
                 break;
