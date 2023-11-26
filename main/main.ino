@@ -74,7 +74,7 @@ void setup(
 
     pinMode(13, OUTPUT);
 
-    for(uint8_t i = 0; i < 13; i++)
+    for(uint8_t i = 0; i < 10; i++)
     {
         pinMode(i, INPUT_PULLUP);
     }
@@ -95,20 +95,19 @@ void setup(
         nullptr);
         
     g_bZoneLayout.init(
-        &g_bZoneStation,
-        &g_motorDriver);
+        &g_bZoneStation);
     xTaskCreate(
         taskLauncher,
         nullptr,
-        CONSTANTS::LAYOUT_TASK_STACK_SIZE,
+        CONSTANTS::LIFT_HILL_READER_TASK_STACK_SIZE,
         &g_bZoneLayout,
-        CONSTANTS::Priority::LAYOUT,
+        CONSTANTS::Priority::ZONES,
         nullptr);
 
     g_bZoneLiftHill.init(
-        0,
-        1,
         2,
+        3,
+        4,
         &g_bZoneLayout,
         &g_motorDriver);
     xTaskCreate(
@@ -116,20 +115,20 @@ void setup(
         nullptr,
         CONSTANTS::LIFT_HILL_READER_TASK_STACK_SIZE,
         &g_bZoneLiftHill,
-        CONSTANTS::Priority::LAYOUT,
+        CONSTANTS::Priority::ZONES,
         nullptr);
     g_pinEventNotifiers[0] = &g_bZoneLiftHill;
     
-    g_bZoneStation.init(
-        &g_bZoneLiftHill,
-        &g_motorDriver);
-    xTaskCreate(
-        taskLauncher,
-        nullptr,
-        CONSTANTS::STATION_TASK_STACK_SIZE,
-        &g_bZoneStation,
-        CONSTANTS::Priority::STATION,
-        nullptr);
+    // g_bZoneStation.init(
+    //     &g_bZoneLiftHill,
+    //     &g_motorDriver);
+    // xTaskCreate(
+    //     taskLauncher,
+    //     nullptr,
+    //     CONSTANTS::STATION_TASK_STACK_SIZE,
+    //     &g_bZoneStation,
+    //     CONSTANTS::Priority::STATION,
+    //     nullptr);
 
     g_halReaderTask.init(
         0b00000011,

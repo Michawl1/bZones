@@ -57,18 +57,22 @@ void NS::bZoneLiftHill::pinEvent(
     uint8_t _pin,
     uint8_t _state)
 {
+    Serial.print("pin: ");
+    Serial.print(_pin);
+    Serial.print(" state: ");
+    Serial.println(_state);
     if(_pin == m_liftHillSensorPin
-        && _state == 1)
+        && _state == 0)
     {
         m_isLiftSensor = true;
     }
     else if(_pin == m_panicSensorPin
-        && _state == 1)
+        && _state == 0)
     {
         m_isPanicSensor = true;
     }
     else if(_pin == m_exitLiftSensorPin
-        && _state == 1)
+        && _state == 0)
     {
         m_isExitLiftSensor = true;
     }
@@ -85,6 +89,7 @@ void NS::bZoneLiftHill::run(
             {
                 if(m_isLiftSensor)
                 {
+                    Serial.println("Lift hill sensor detected...");
                     m_currState = liftHillStates::WAITING_FOR_NEXT_ZONE_CLEAR;
                     m_isOccupied = true;
                 }
@@ -113,7 +118,7 @@ void NS::bZoneLiftHill::run(
                 m_motorDriver->setPWM(
                     15,
                     0,
-                    4000);
+                    4095);
 
                 if(m_isExitLiftSensor)
                 {
@@ -129,7 +134,7 @@ void NS::bZoneLiftHill::run(
                 m_motorDriver->setPWM(
                     15,
                     0,
-                    2000);
+                    1000);
                 
                 // Wait a bit for the train to leave.
                 vTaskDelay(250 / portTICK_PERIOD_MS);
@@ -138,6 +143,6 @@ void NS::bZoneLiftHill::run(
                 m_isExitLiftSensor = false;
             }
         }
-        vTaskDelay(50 / portTICK_PERIOD_MS);
+        vTaskDelay(100 / portTICK_PERIOD_MS);
     }
 }

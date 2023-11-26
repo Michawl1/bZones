@@ -24,9 +24,8 @@ namespace bzones
         enum Priority : uint8_t
         {
             BLINK = 0,
-            STATION = 1,
-            LAYOUT = 2,
-            HAL_READER = 3,
+            ZONES = 1,
+            HAL_READER = 2
         };
 
         /**
@@ -42,12 +41,12 @@ namespace bzones
         /**
          * @brief The size of the stack for the layout task.
          */
-        const uint16_t LAYOUT_TASK_STACK_SIZE = 64;
+        const uint16_t LAYOUT_TASK_STACK_SIZE = 96;
 
         /**
          * @brief The stack size for the lift hill task.
          */
-        const uint16_t LIFT_HILL_READER_TASK_STACK_SIZE = 64;
+        const uint16_t LIFT_HILL_READER_TASK_STACK_SIZE = 96;
 
         /**
          * @brief The size of the stack for the station task.

@@ -54,7 +54,7 @@ uint8_t NS::HalReaderTask::getBytePos(
         return retVal;
     }
 
-    while((_byte & 0x01) == 0)
+    while(_byte != 0)
     {
         _byte >>= 1;
         retVal ++;
@@ -71,7 +71,7 @@ void NS::HalReaderTask::run(
 
     while(true)
     {
-        vTaskDelay(50 / portTICK_PERIOD_MS);
+        vTaskDelay(25 / portTICK_PERIOD_MS);
 
         portB = PINB & m_portBInputMask;
         portD = PIND & m_portDInputMask;
@@ -86,7 +86,7 @@ void NS::HalReaderTask::run(
             {
                 m_pinEvents[i]->pinEvent(
                     bytePos + 7,
-                    portB & (0x01 << bytePos));
+                    (portB >> (bytePos - 1)) & 0x01);
             }
         }
         else if(portD != m_prevDState)
@@ -99,7 +99,7 @@ void NS::HalReaderTask::run(
             {
                 m_pinEvents[i]->pinEvent(
                     bytePos - 1,
-                    portD & (0x01 << bytePos));
+                    (portD >> (bytePos - 1)) & 0x01);
             }
         }
     }

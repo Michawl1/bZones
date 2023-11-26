@@ -18,21 +18,15 @@ namespace NS = bzones::tasks;
 NS::bZoneLayout::bZoneLayout(
     void)
 : m_isInitialized(false),
-  m_isNewPinEvent(false),
-  m_isOccupied(true),
-  m_motorDriver(nullptr),
-  m_nextZone(nullptr),
-  m_pinEventPin(0),
-  m_pinEventState(0)
+  m_isOccupied(false),
+  m_nextZone(nullptr)
 {
 }
 
 void NS::bZoneLayout::init(
-    bzones::interfaces::IBlockZone* _nextZone,
-    Adafruit_PWMServoDriver* _motorDriver)
+    bzones::interfaces::IBlockZone* _nextZone)
 {
     m_nextZone = _nextZone;
-    m_motorDriver = _motorDriver;
 
     m_isInitialized = true;
 }
@@ -47,36 +41,13 @@ void NS::bZoneLayout::pinEvent(
     uint8_t _pin,
     uint8_t _state)
 {
-    m_isNewPinEvent = true;
-    m_pinEventPin = _pin;
-    m_pinEventState = _state;
-
-    Serial.println(m_pinEventPin);
 }
 
 void NS::bZoneLayout::run(
     void)
 {
-    bool toggle = true;
-
     while(true)
     {
-        if(toggle)
-        {
-            toggle = !toggle;
-            m_motorDriver->setPWM(
-                0,
-                0,
-                100);
-        }
-        else
-        {
-            toggle = !toggle;
-            m_motorDriver->setPWM(
-                0,
-                0,
-                300);
-        }
-        vTaskDelay(1000 / portTICK_PERIOD_MS);
+        vTaskDelay(100 / portTICK_PERIOD_MS);
     }
 }
