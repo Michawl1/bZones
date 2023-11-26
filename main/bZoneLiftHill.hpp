@@ -23,12 +23,39 @@ namespace bzones
 {
     namespace tasks
     {
+        namespace liftHillStates 
+        {
+            enum LiftHillStates : uint8_t
+            {
+                WAITING_FOR_LIFT_SENSOR = 1,
+                WAITING_FOR_NEXT_ZONE_CLEAR = 2,
+                WAITING_FOR_EXIT_SENSOR = 3,
+                RESET
+            };
+        } // namespace liftHillStates
+
         class bZoneLiftHill:
             public bzones::interfaces::ITask,
             public bzones::interfaces::IBlockZone,
             public bzones::interfaces::IPinEvent
         {
             private:
+                /**
+                 * @brief The current state of this task.
+                 */
+                liftHillStates::LiftHillStates m_currState;
+
+                /**
+                 * @brief The pin index for the exit lift hill sensor.
+                 */
+                uint8_t m_exitLiftSensorPin;
+
+                /**
+                 * @brief A flag to indicate that the exit lift hill sensor
+                 * has been activated.
+                 */
+                bool m_isExitLiftSensor;
+
                 /**
                  * @brief A flag to indicate that this object has been 
                  * initialized.
@@ -42,9 +69,21 @@ namespace bzones
                 bool m_isOccupied;
 
                 /**
-                 * @brief A flag to indicate that a new pin event occurred.
+                 * @brief A flag to indicate that the lift sensor has been 
+                 * activated.
                  */
-                bool m_isNewPinEvent;
+                bool m_isLiftSensor;
+
+                /**
+                 * @brief A flag to indicate that the panic sensor has been 
+                 * activated.
+                 */
+                bool m_isPanicSensor;
+
+                /**
+                 * @brief The pin index for the lift hill sensor.
+                */
+                uint8_t m_liftHillSensorPin;
 
                 /**
                  * @brief The motor driver used to control all motors on the
@@ -59,14 +98,9 @@ namespace bzones
                 bzones::interfaces::IBlockZone* m_nextZone;
 
                 /**
-                 * @brief The pin number that gets called from a pin event.
+                 * @brief The pin index for the panic sensor.
                  */
-                uint8_t m_pinEventPin;
-
-                /**
-                 * @brief The state of the pin from the pin event.
-                 */
-                uint8_t m_pinEventState;
+                uint8_t m_panicSensorPin;
             
             public:
                 /**
@@ -84,6 +118,12 @@ namespace bzones
                  * @brief Initializes this object.
                  * @pre
                  * @post
+                 * @param[in] _liftHillSensorPin The pin index for the lift hill
+                 * sensor.
+                 * @param[in] _panicSensorPin The pin index for the panic 
+                 * sensor.
+                 * @param[in] _exitLiftSensorPin The pin index for the exit lift
+                 * hill sensor.
                  * @param[in] _nextZone The next block zone, used to know if it 
                  * is safe to dispatch.
                  * @param[in] _motorDriver The motor driver used to control all
@@ -93,6 +133,9 @@ namespace bzones
                  * @details
                  */
                 void init(
+                    uint8_t _liftHillSensorPin,
+                    uint8_t _panicSensorPin,
+                    uint8_t _exitLiftSensorPin,
                     bzones::interfaces::IBlockZone* _nextZone,
                     Adafruit_PWMServoDriver* _motorDriver);
 

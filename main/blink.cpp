@@ -31,9 +31,6 @@ void NS::Blink::init(
 void NS::Blink::run(
     void)
 {
-    TaskHandle_t currTask = xTaskGetCurrentTaskHandle();
-    Serial.println("Starting task: " + String(pcTaskGetName(currTask)));
-
     while(true)
     {
         digitalWrite(13, HIGH);

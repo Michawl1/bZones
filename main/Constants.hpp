@@ -30,29 +30,14 @@ namespace bzones
         };
 
         /**
-         * @brief The name of the blink task.
-         */
-        const char* BLINK_TASK_NAME = "Blink";
-
-        /**
          * @brief The size of the stack for the blink task.
          */
-        const uint16_t BLINK_TASK_STACK_SIZE = 78;
-
-        /**
-         * @brief The name of the hal reader task.
-         */
-        const char* HAL_READER_TASK_NAME = "HalRead";
+        const uint16_t BLINK_TASK_STACK_SIZE = 48;
 
         /**
          * @brief The stack size for the hal reader task.
          */
-        const uint16_t HAL_READER_TASK_STACK_SIZE = 56;
-
-        /**
-         * @brief The name of the blink task.
-         */
-        const char* LAYOUT_TASK_NAME = "Layout";
+        const uint16_t HAL_READER_TASK_STACK_SIZE = 96;
 
         /**
          * @brief The size of the stack for the layout task.
@@ -60,24 +45,19 @@ namespace bzones
         const uint16_t LAYOUT_TASK_STACK_SIZE = 64;
 
         /**
-         * @brief The name of the lift hill task.
-         */
-        const char* LIFT_HILL_READER_TASK_NAME = "LiftHil";
-
-        /**
          * @brief The stack size for the lift hill task.
          */
         const uint16_t LIFT_HILL_READER_TASK_STACK_SIZE = 64;
 
         /**
-         * @brief The name of the station task.
-         */
-        const char* STATION_TASK_NAME = "Station";
-
-        /**
          * @brief The size of the stack for the station task.
          */
         const uint16_t STATION_TASK_STACK_SIZE = 64;
+
+        /**
+         * @brief The number of objects that subscribe to pin events.
+        */
+        const uint8_t PIN_EVENT_NOTIFIERS_SIZE = 1;
 
     } // namespace contants
 } // namespace bzones

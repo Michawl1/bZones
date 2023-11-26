@@ -54,15 +54,15 @@ namespace bzones
                 uint8_t m_prevDState;
 
                 /**
-                 * @brief A 2 array of events to call when pin 0 changes state.
-                 * Where m_pinEvents[0] is all of the pin events for pin 0 etc.
+                 * @brief An array of all of the objects that subscribe to pin
+                 * events.
                  */
-                bzones::interfaces::IPinEvent*** m_pinEvents;
+                bzones::interfaces::IPinEvent** m_pinEvents;
 
                 /**
-                 * @brief The size of each sub array within @m_pinEvents.
+                 * @brief The size of @m_pinEvents.
                  */
-                uint8_t* m_pinEventsSize;
+                uint8_t m_pinEventsSize;
             
             public:
                 /**
@@ -84,11 +84,9 @@ namespace bzones
                  * changes.
                  * @param[in] _portDInputMask The pins to monitor on port D for 
                  * changes.
-                 * @param[in] _pinEvents A 2 array of events to call when pin 0 
-                 * changes state. Where m_pinEvents[0] is all of the pin events 
-                 * for pin 0 etc.
-                 * @param[in] _pinEventsSize The size of each sub array within 
-                 * @m_pinEvents.
+                 * @param[in] _pinEvents An array of all of the objects that 
+                 * subscribe to pin events.
+                 * @param[in] _pinEventsSize The size of @_pinEvents.
                  * @return This method performs an operation and does not return
                  * a value.
                  * @details
@@ -96,12 +94,12 @@ namespace bzones
                 void init(
                     uint8_t _portBInputMask,
                     uint8_t _portDInputMask,
-                    bzones::interfaces::IPinEvent*** _pinEvents,
-                    uint8_t* _pinEventsSize);
+                    bzones::interfaces::IPinEvent** _pinEvents,
+                    uint8_t _pinEventsSize);
 
                 /**
                  * @brief Runs this object's task.
-                 * @pre This object has been initialized.
+                 * @pre
                  * @post
                  * @return This method performs an operation and does not return
                  * a value.
@@ -109,6 +107,17 @@ namespace bzones
                  */
                 void run(
                     void) override;
+
+            private:
+                /**
+                 * @brief Helper method to get the position of a 1 in a byte.
+                 * @pre
+                 * @post
+                 * @param[in] _byte The byte to evaluate where the 1 is.
+                 * @details returns only the first found 1.
+                 */
+                uint8_t getBytePos(
+                    uint8_t _byte);
         };
     } // namespace tasks
 } // namespace bzones

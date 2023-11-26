@@ -25,50 +25,16 @@
 
 #define configMINIMAL_STACK_SIZE    ((unsigned short)32)
 
-static bzones::tasks::Blink g_blinkTask;
-static TaskHandle_t g_blinkTaskHandler;
-static bzones::tasks::bZoneLayout g_bZoneLayout;
-static TaskHandle_t g_bZoneLayoutTaskHandler;
-static bzones::tasks::bZoneLiftHill g_bZoneLiftHill;
-static TaskHandle_t g_bZoneLiftHillTaskHandler;
-static bzones::tasks::bZoneStation g_bZoneStation;
-static TaskHandle_t g_bZoneStationTaskHandler;
-static bzones::tasks::HalReaderTask g_halReaderTask;
-static TaskHandle_t g_halReaderTaskHandler;
-static Adafruit_PWMServoDriver g_motorDriver;
-static uint8_t g_pinEventsSize[13] = {0,0,0,0,0,0,0,0,0,0,0,0,0};
-
-static bzones::interfaces::IPinEvent* g_pin0Events[0];
-static bzones::interfaces::IPinEvent* g_pin1Events[0];
-static bzones::interfaces::IPinEvent* g_pin2Events[0];
-static bzones::interfaces::IPinEvent* g_pin3Events[0];
-static bzones::interfaces::IPinEvent* g_pin4Events[0];
-static bzones::interfaces::IPinEvent* g_pin5Events[0];
-static bzones::interfaces::IPinEvent* g_pin6Events[0];
-static bzones::interfaces::IPinEvent* g_pin7Events[0];
-static bzones::interfaces::IPinEvent* g_pin8Events[0];
-static bzones::interfaces::IPinEvent* g_pin9Events[0];
-static bzones::interfaces::IPinEvent* g_pin10Events[0];
-static bzones::interfaces::IPinEvent* g_pin11Events[0];
-static bzones::interfaces::IPinEvent* g_pin12Events[0];
-static bzones::interfaces::IPinEvent* g_pin13Events[0];
-static bzones::interfaces::IPinEvent** g_pinEvents[] = {
-    g_pin0Events,
-    g_pin1Events,
-    g_pin2Events,
-    g_pin3Events,
-    g_pin4Events,
-    g_pin5Events,
-    g_pin6Events,
-    g_pin7Events,
-    g_pin8Events,
-    g_pin9Events,
-    g_pin10Events,
-    g_pin11Events,
-    g_pin12Events,
-    g_pin13Events};
-
 namespace CONSTANTS = bzones::constants;
+
+static bzones::tasks::Blink g_blinkTask;
+static bzones::tasks::bZoneLayout g_bZoneLayout;
+static bzones::tasks::bZoneLiftHill g_bZoneLiftHill;
+static bzones::tasks::bZoneStation g_bZoneStation;
+static bzones::tasks::HalReaderTask g_halReaderTask;
+static Adafruit_PWMServoDriver g_motorDriver;
+
+static bzones::interfaces::IPinEvent* g_pinEventNotifiers[CONSTANTS::PIN_EVENT_NOTIFIERS_SIZE];
 
 /**
  * @brief The interrupt triggered on pins 8-13.
@@ -122,57 +88,61 @@ void setup(
     g_blinkTask.init();
     xTaskCreate(
         taskLauncher,
-        CONSTANTS::BLINK_TASK_NAME,
+        nullptr,
         CONSTANTS::BLINK_TASK_STACK_SIZE,
         &g_blinkTask,
         CONSTANTS::Priority::BLINK,
-        &g_blinkTaskHandler);
+        nullptr);
         
     g_bZoneLayout.init(
         &g_bZoneStation,
         &g_motorDriver);
     xTaskCreate(
         taskLauncher,
-        CONSTANTS::LAYOUT_TASK_NAME,
+        nullptr,
         CONSTANTS::LAYOUT_TASK_STACK_SIZE,
         &g_bZoneLayout,
         CONSTANTS::Priority::LAYOUT,
-        &g_bZoneLayoutTaskHandler);
+        nullptr);
 
     g_bZoneLiftHill.init(
+        0,
+        1,
+        2,
         &g_bZoneLayout,
         &g_motorDriver);
     xTaskCreate(
         taskLauncher,
-        CONSTANTS::LIFT_HILL_READER_TASK_NAME,
+        nullptr,
         CONSTANTS::LIFT_HILL_READER_TASK_STACK_SIZE,
         &g_bZoneLiftHill,
         CONSTANTS::Priority::LAYOUT,
-        &g_bZoneLiftHillTaskHandler);
+        nullptr);
+    g_pinEventNotifiers[0] = &g_bZoneLiftHill;
     
     g_bZoneStation.init(
         &g_bZoneLiftHill,
         &g_motorDriver);
     xTaskCreate(
         taskLauncher,
-        CONSTANTS::STATION_TASK_NAME,
+        nullptr,
         CONSTANTS::STATION_TASK_STACK_SIZE,
         &g_bZoneStation,
         CONSTANTS::Priority::STATION,
-        &g_bZoneStationTaskHandler);
+        nullptr);
 
     g_halReaderTask.init(
         0b00000011,
         0b11111111,
-        g_pinEvents,
-        g_pinEventsSize);
+        g_pinEventNotifiers,
+        CONSTANTS::PIN_EVENT_NOTIFIERS_SIZE);
     xTaskCreate(
         taskLauncher,
-        CONSTANTS::HAL_READER_TASK_NAME,
+        nullptr,
         CONSTANTS::HAL_READER_TASK_STACK_SIZE,
         &g_halReaderTask,
         CONSTANTS::Priority::HAL_READER,
-        &g_halReaderTaskHandler);
+        nullptr);
 }
 
 void loop(
