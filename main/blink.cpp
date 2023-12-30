@@ -20,6 +20,7 @@ NS::Blink::Blink(
 : m_isInitialized(false)
 {
 
+
 }
 
 void NS::Blink::init(
