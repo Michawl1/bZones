@@ -71,7 +71,7 @@ void NS::HalReaderTask::run(
 
     while(true)
     {
-        vTaskDelay(25 / portTICK_PERIOD_MS);
+        vTaskDelay(20 / portTICK_PERIOD_MS);
 
         portB = PINB & m_portBInputMask;
         portD = PIND & m_portDInputMask;

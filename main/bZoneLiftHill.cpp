@@ -84,14 +84,14 @@ void NS::bZoneLiftHill::run(
             case liftHillStates::WAITING_FOR_LIFT_SENSOR:
             {
                 if(m_isLiftSensor)
-                {
-                    m_currState = liftHillStates::WAITING_FOR_NEXT_ZONE_CLEAR;
-                    m_isOccupied = true;
-                    
+                {                    
                     m_motorDriver->setPWM(
                         15,
                         0,
                         2500);
+                        
+                    m_currState = liftHillStates::WAITING_FOR_NEXT_ZONE_CLEAR;
+                    m_isOccupied = true;
                 }
             }
             break;
@@ -133,8 +133,6 @@ void NS::bZoneLiftHill::run(
 
             case liftHillStates::RESET:
             {
-                m_currState = liftHillStates::WAITING_FOR_LIFT_SENSOR;
-                
                 m_motorDriver->setPWM(
                     15,
                     0,
@@ -145,6 +143,8 @@ void NS::bZoneLiftHill::run(
                 m_isLiftSensor = false;
                 m_isPanicSensor = false;
                 m_isExitLiftSensor = false;
+
+                m_currState = liftHillStates::WAITING_FOR_LIFT_SENSOR;
             }
         }
         vTaskDelay(100 / portTICK_PERIOD_MS);
