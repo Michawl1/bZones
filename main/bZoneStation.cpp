@@ -88,6 +88,16 @@ void NS::bZoneStation::run(
 
             case stationStates::STATION_OPERATIONS:
             {
+                vTaskDelay(1000 / portTICK_PERIOD_MS);
+                m_motorDriver->setPWM(
+                    5,
+                    0,
+                    100);
+                vTaskDelay(1000 / portTICK_PERIOD_MS);
+                m_motorDriver->setPWM(
+                    5,
+                    0,
+                    200);
                 vTaskDelay(2000 / portTICK_PERIOD_MS);
                 m_currState = stationStates::WAITING_FOR_NEXT_ZONE_CLEAR;
             }
