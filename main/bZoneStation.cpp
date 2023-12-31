@@ -117,8 +117,6 @@ void NS::bZoneStation::run(
 
             case stationStates::RESET:
             {
-                m_currState = stationStates::RESET;
-
                 m_isStopSensor = false;
                 m_isTrainExitSensor = false;
                 m_isOccupied = false;
@@ -127,6 +125,7 @@ void NS::bZoneStation::run(
                     4,
                     0,
                     4095);
+                m_currState = stationStates::WAITING_FOR_STOP_SENSOR;
             }
             break;
         }
