@@ -25,6 +25,7 @@
 #include "halReaderTask.hpp"
 
 #define configMINIMAL_STACK_SIZE    ((unsigned short)32)
+#define configMAX_PRIORITIES 10
 
 namespace CONSTANTS = bzones::constants;
 
@@ -107,7 +108,7 @@ void setup(
         nullptr,
         CONSTANTS::LIFT_HILL_READER_TASK_STACK_SIZE,
         &g_bZoneLiftHill,
-        CONSTANTS::Priority::ZONES,
+        CONSTANTS::Priority::LIFT_HILL,
         nullptr);
     g_pinEventNotifiers[0] = &g_bZoneLiftHill;
         
@@ -116,9 +117,9 @@ void setup(
     xTaskCreate(
         taskLauncher,
         nullptr,
-        CONSTANTS::LIFT_HILL_READER_TASK_STACK_SIZE,
+        CONSTANTS::LAYOUT_TASK_STACK_SIZE,
         &g_bZoneLayout,
-        CONSTANTS::Priority::ZONES,
+        CONSTANTS::Priority::LAYOUT,
         nullptr);
     g_pinEventNotifiers[1] = &g_bZoneLayout;
 
@@ -130,7 +131,7 @@ void setup(
         nullptr,
         CONSTANTS::TRANSFER_TRACK_STACK_SIZE,
         &g_bZoneTransferTrack,
-        CONSTANTS::Priority::ZONES,
+        CONSTANTS::Priority::TRANFER_TRACK,
         nullptr);
     g_pinEventNotifiers[2] = &g_bZoneTransferTrack;
     
@@ -144,7 +145,7 @@ void setup(
         nullptr,
         CONSTANTS::STATION_TASK_STACK_SIZE,
         &g_bZoneStation,
-        CONSTANTS::Priority::ZONES,
+        CONSTANTS::Priority::STATION,
         nullptr);
     g_pinEventNotifiers[3] = &g_bZoneStation;
 

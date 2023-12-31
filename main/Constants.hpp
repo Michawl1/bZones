@@ -24,8 +24,11 @@ namespace bzones
         enum Priority : uint8_t
         {
             BLINK = 0,
-            ZONES = 1,
-            HAL_READER = 2
+            TRANFER_TRACK,
+            LAYOUT,
+            LIFT_HILL,
+            STATION,
+            HAL_READER
         };
 
         /**
