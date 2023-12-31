@@ -87,6 +87,11 @@ void NS::bZoneLiftHill::run(
                 {
                     m_currState = liftHillStates::WAITING_FOR_NEXT_ZONE_CLEAR;
                     m_isOccupied = true;
+                    
+                    m_motorDriver->setPWM(
+                        15,
+                        0,
+                        2500);
                 }
             }
             break;
