@@ -19,11 +19,8 @@ NS::bZoneStation::bZoneStation(
     void)
 : m_isInitialized(false),
   m_isOccupied(true),
-  m_isNewPinEvent(false),
   m_motorDriver(nullptr),
-  m_nextZone(nullptr),
-  m_pinEventPin(0),
-  m_pinEventState(0)
+  m_nextZone(nullptr)
 {
 }
 
@@ -47,7 +44,7 @@ void NS::bZoneStation::pinEvent(
     uint8_t _pin,
     uint8_t _state)
 {
-    
+
 }
 
 void NS::bZoneStation::run(

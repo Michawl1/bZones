@@ -137,13 +137,13 @@ void setup(
     g_bZoneStation.init(
         &g_bZoneLiftHill,
         &g_motorDriver);
-    // xTaskCreate(
-    //     taskLauncher,
-    //     nullptr,
-    //     CONSTANTS::STATION_TASK_STACK_SIZE,
-    //     &g_bZoneStation,
-    //     CONSTANTS::Priority::ZONES,
-    //     nullptr);
+    xTaskCreate(
+        taskLauncher,
+        nullptr,
+        CONSTANTS::STATION_TASK_STACK_SIZE,
+        &g_bZoneStation,
+        CONSTANTS::Priority::ZONES,
+        nullptr);
     //g_pinEventNotifiers[3] = &g_bZoneStation;
 
     g_halReaderTask.init(
