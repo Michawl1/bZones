@@ -105,9 +105,13 @@ void NS::bZoneLiftHill::run(
                         15,
                         0,
                         0);
+
+                    // TODO remove this
+                    vTaskDelay(2000 / portTICK_PERIOD_MS);
+                    m_currState = liftHillStates::WAITING_FOR_EXIT_SENSOR;
                 }
                 else if(!m_nextZone->isOccupied())
-                {                  
+                {
                     m_currState = liftHillStates::WAITING_FOR_EXIT_SENSOR;
                 }
             }

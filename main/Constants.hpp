@@ -51,7 +51,7 @@ namespace bzones
         /**
          * @brief The number of objects that subscribe to pin events.
         */
-        const uint8_t PIN_EVENT_NOTIFIERS_SIZE = 3;
+        const uint8_t PIN_EVENT_NOTIFIERS_SIZE = 4;
 
         /**
          * @brief The size of the stack for the station task.

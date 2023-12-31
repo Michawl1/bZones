@@ -23,12 +23,29 @@ namespace bzones
 {
     namespace tasks
     {
+        namespace stationStates
+        {
+            enum StationStates : uint8_t
+            {
+                WAITING_FOR_STOP_SENSOR = 1,
+                STATION_OPERATIONS = 2,
+                WAITING_FOR_NEXT_ZONE_CLEAR = 3,
+                WAITING_FOR_TRAIN_EXIT = 4,
+                RESET
+            };
+        } // namespace stationStates
+
         class bZoneStation:
             public bzones::interfaces::ITask,
             public bzones::interfaces::IBlockZone,
             public bzones::interfaces::IPinEvent
         {
             private:
+                /**
+                 * @brief The current state of this task.
+                 */
+                stationStates::StationStates m_currState;
+
                 /**
                  * @brief A flag to indicate that this object has been 
                  * initialized.
@@ -42,6 +59,18 @@ namespace bzones
                 bool m_isOccupied;
 
                 /**
+                 * @brief A flag to indicate if the stop sensor has been 
+                 * triggered.
+                 */
+                bool m_isStopSensor;
+
+                /**
+                 * @brief A flag to indicate if the train exit sensor has been
+                 * triggered
+                 */
+                bool m_isTrainExitSensor;
+
+                /**
                  * @brief The motor driver used to control all motors on the
                  * system.
                  */
@@ -52,6 +81,16 @@ namespace bzones
                  * one is clear or not.
                  */
                 bzones::interfaces::IBlockZone* m_nextZone;
+
+                /**
+                 * @brief The pin number for the stop sensor.
+                 */
+                uint8_t m_stopSensorPin;
+
+                /**
+                 * @brief The pin number for the train exit sensor.
+                 */
+                uint8_t m_trainExitSensorPin;
             
             public:
                 /**
@@ -69,6 +108,9 @@ namespace bzones
                  * @brief Initializes this object.
                  * @pre
                  * @post
+                 * @param[in] _stopSensorPin The pin number for the stop sensor.
+                 * @param[in] _trainExitSensorPin The pin number for the train 
+                 * exit sensor.
                  * @param[in] _nextZone The next block zone, used to know if it 
                  * is safe to dispatch.
                  * @param[in] _motorDriver The motor driver used to control all
@@ -78,6 +120,8 @@ namespace bzones
                  * @details
                  */
                 void init(
+                    uint8_t _stopSensorPin,
+                    uint8_t _trainExitSensorPin,
                     bzones::interfaces::IBlockZone* _nextZone,
                     Adafruit_PWMServoDriver* _motorDriver);
 
