@@ -54,5 +54,9 @@ void NS::bZoneTransferTrack::run(
     while(true)
     {
         vTaskDelay(1000 / portTICK_PERIOD_MS);
+        m_motorDriver->setPWM(
+            4,
+            0,
+            4095);
     }
 }
