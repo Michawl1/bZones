@@ -18,7 +18,8 @@ namespace NS = bzones::tasks;
 NS::bZoneLayout::bZoneLayout(
     void)
 : m_isInitialized(false),
-  m_isOccupied(true)
+  m_isOccupied(true),
+  m_nextZone(nullptr)
 {
 }
 
@@ -36,23 +37,17 @@ bool NS::bZoneLayout::isOccupied(
     return m_isOccupied;
 }
 
+void NS::bZoneLayout::pinEvent(
+    uint8_t _pin,
+    uint8_t _state)
+{
+}
+
 void NS::bZoneLayout::run(
     void)
 {
-    TaskHandle_t currTask = xTaskGetCurrentTaskHandle();
-    Serial.println("Starting task: " + String(pcTaskGetName(currTask)));
     while(true)
-    {        
-        if(m_isOccupied)
-        {
-            Serial.println("Train in: "+ String(pcTaskGetName(currTask)));
-        }
-
-        if(m_isOccupied && !m_nextZone->isOccupied())
-        {
-            Serial.println("Next zone is open");
-        }
-
-        vTaskDelay(1000 / portTICK_PERIOD_MS);
+    {
+        vTaskDelay(100 / portTICK_PERIOD_MS);
     }
 }

@@ -1,8 +1,8 @@
 /*
  *******************************************************************************
- * @file bZoneLayout.hpp
+ * @file bZoneLiftHill.hpp
  * @author Michael Thompson (mthompsonkp11@gmail.com)
- * @date 14 October 2023
+ * @date 19 November 2023
  * 
  * @brief This file outlines a block zone task for the layout.
  * @details
@@ -23,12 +23,39 @@ namespace bzones
 {
     namespace tasks
     {
-        class bZoneLayout:
+        namespace liftHillStates 
+        {
+            enum LiftHillStates : uint8_t
+            {
+                WAITING_FOR_LIFT_SENSOR = 1,
+                WAITING_FOR_NEXT_ZONE_CLEAR = 2,
+                WAITING_FOR_EXIT_SENSOR = 3,
+                RESET
+            };
+        } // namespace liftHillStates
+
+        class bZoneLiftHill:
             public bzones::interfaces::ITask,
             public bzones::interfaces::IBlockZone,
             public bzones::interfaces::IPinEvent
         {
             private:
+                /**
+                 * @brief The current state of this task.
+                 */
+                liftHillStates::LiftHillStates m_currState;
+
+                /**
+                 * @brief The pin index for the exit lift hill sensor.
+                 */
+                uint8_t m_exitLiftSensorPin;
+
+                /**
+                 * @brief A flag to indicate that the exit lift hill sensor
+                 * has been activated.
+                 */
+                bool m_isExitLiftSensor;
+
                 /**
                  * @brief A flag to indicate that this object has been 
                  * initialized.
@@ -40,11 +67,40 @@ namespace bzones
                  * occupied.
                  */
                 bool m_isOccupied;
+
+                /**
+                 * @brief A flag to indicate that the lift sensor has been 
+                 * activated.
+                 */
+                bool m_isLiftSensor;
+
+                /**
+                 * @brief A flag to indicate that the panic sensor has been 
+                 * activated.
+                 */
+                bool m_isPanicSensor;
+
+                /**
+                 * @brief The pin index for the lift hill sensor.
+                */
+                uint8_t m_liftHillSensorPin;
+
+                /**
+                 * @brief The motor driver used to control all motors on the
+                 * system.
+                 */
+                Adafruit_PWMServoDriver* m_motorDriver;
+
                 /**
                  * @brief A pointer to the next block zone used to know if this
                  * one is clear or not.
                  */
                 bzones::interfaces::IBlockZone* m_nextZone;
+
+                /**
+                 * @brief The pin index for the panic sensor.
+                 */
+                uint8_t m_panicSensorPin;
             
             public:
                 /**
@@ -55,21 +111,33 @@ namespace bzones
                  * a value.
                  * @details
                  */
-                bZoneLayout(
+                bZoneLiftHill(
                     void);
 
                 /**
                  * @brief Initializes this object.
                  * @pre
                  * @post
+                 * @param[in] _liftHillSensorPin The pin index for the lift hill
+                 * sensor.
+                 * @param[in] _panicSensorPin The pin index for the panic 
+                 * sensor.
+                 * @param[in] _exitLiftSensorPin The pin index for the exit lift
+                 * hill sensor.
                  * @param[in] _nextZone The next block zone, used to know if it 
                  * is safe to dispatch.
+                 * @param[in] _motorDriver The motor driver used to control all
+                 * motors on the system.
                  * @return This method performs an operation and does not return
                  * a value.
                  * @details
                  */
                 void init(
-                    bzones::interfaces::IBlockZone* _nextZone);
+                    uint8_t _liftHillSensorPin,
+                    uint8_t _panicSensorPin,
+                    uint8_t _exitLiftSensorPin,
+                    bzones::interfaces::IBlockZone* _nextZone,
+                    Adafruit_PWMServoDriver* _motorDriver);
 
                 /**
                  * @brief Tells the user if this block zone is occupied.

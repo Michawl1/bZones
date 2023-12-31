@@ -1,10 +1,10 @@
 /*
  *******************************************************************************
- * @file bZoneLayout.hpp
+ * @file bZoneTransferTrack.hpp
  * @author Michael Thompson (mthompsonkp11@gmail.com)
- * @date 14 October 2023
+ * @date 30 December 2023
  * 
- * @brief This file outlines a block zone task for the layout.
+ * @brief This file outlines a block zone task for the transfer track.
  * @details
  * 
  *******************************************************************************
@@ -23,7 +23,7 @@ namespace bzones
 {
     namespace tasks
     {
-        class bZoneLayout:
+        class bZoneTransferTrack:
             public bzones::interfaces::ITask,
             public bzones::interfaces::IBlockZone,
             public bzones::interfaces::IPinEvent
@@ -40,12 +40,19 @@ namespace bzones
                  * occupied.
                  */
                 bool m_isOccupied;
+
+                /**
+                 * @brief The motor driver used to control all motors on the
+                 * system.
+                 */
+                Adafruit_PWMServoDriver* m_motorDriver;
+
                 /**
                  * @brief A pointer to the next block zone used to know if this
                  * one is clear or not.
                  */
                 bzones::interfaces::IBlockZone* m_nextZone;
-            
+
             public:
                 /**
                  * @brief Empty constructor.
@@ -55,7 +62,7 @@ namespace bzones
                  * a value.
                  * @details
                  */
-                bZoneLayout(
+                bZoneTransferTrack(
                     void);
 
                 /**
@@ -64,12 +71,15 @@ namespace bzones
                  * @post
                  * @param[in] _nextZone The next block zone, used to know if it 
                  * is safe to dispatch.
+                 * @param[in] _motorDriver The motor driver used to control all
+                 * motors on the system.
                  * @return This method performs an operation and does not return
                  * a value.
                  * @details
                  */
                 void init(
-                    bzones::interfaces::IBlockZone* _nextZone);
+                    bzones::interfaces::IBlockZone* _nextZone,
+                    Adafruit_PWMServoDriver* _motorDriver);
 
                 /**
                  * @brief Tells the user if this block zone is occupied.

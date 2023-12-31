@@ -1,30 +1,31 @@
 /*
  *******************************************************************************
- * @file bZoneStation.cpp
+ * @file bZoneTransferTrack.cpp
  * @author Michael Thompson (mthompsonkp11@gmail.com)
- * @date 13 October 2023
+ * @date 30 December 2023
  * 
- * @brief This file outlines a block zone task for a station.
+ * @brief This file outlines a block zone task for the transfer track.
  * @details
  * 
  *******************************************************************************
  */
 
-#include <Arduino.h>
-#include "bZoneStation.hpp"
+ #include <Arduino.h>
+ #include "bZoneTransferTrack.hpp"
 
-namespace NS = bzones::tasks;
+ namespace NS = bzones::tasks;
 
-NS::bZoneStation::bZoneStation(
+ NS::bZoneTransferTrack::bZoneTransferTrack(
     void)
 : m_isInitialized(false),
   m_isOccupied(true),
   m_motorDriver(nullptr),
   m_nextZone(nullptr)
 {
+
 }
 
-void NS::bZoneStation::init(
+void NS::bZoneTransferTrack::init(
     bzones::interfaces::IBlockZone* _nextZone,
     Adafruit_PWMServoDriver* _motorDriver)
 {
@@ -34,26 +35,28 @@ void NS::bZoneStation::init(
     m_isInitialized = true;
 }
 
-bool NS::bZoneStation::isOccupied(
+bool NS::bZoneTransferTrack::isOccupied(
     void)
 {
     return m_isOccupied;
 }
 
-void NS::bZoneStation::pinEvent(
+void NS::bZoneTransferTrack::pinEvent(
     uint8_t _pin,
     uint8_t _state)
 {
-
+    
 }
 
-void NS::bZoneStation::run(
+void NS::bZoneTransferTrack::run(
     void)
 {
-    bool toggle = true;
-
     while(true)
     {
         vTaskDelay(1000 / portTICK_PERIOD_MS);
+        m_motorDriver->setPWM(
+            4,
+            0,
+            4095);
     }
 }
