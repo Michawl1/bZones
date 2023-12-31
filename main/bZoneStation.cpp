@@ -88,7 +88,7 @@ void NS::bZoneStation::run(
 
             case stationStates::STATION_OPERATIONS:
             {
-                vTaskDelay(3000 / portTICK_PERIOD_MS);
+                vTaskDelay(2000 / portTICK_PERIOD_MS);
                 m_currState = stationStates::WAITING_FOR_NEXT_ZONE_CLEAR;
             }
             break;
