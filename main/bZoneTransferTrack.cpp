@@ -18,7 +18,7 @@
  NS::bZoneTransferTrack::bZoneTransferTrack(
     void)
 : m_isInitialized(false),
-  m_isOccupied(false),
+  m_isOccupied(true),
   m_motorDriver(nullptr),
   m_nextZone(nullptr)
 {

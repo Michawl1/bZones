@@ -21,7 +21,7 @@ NS::bZoneLiftHill::bZoneLiftHill(
   m_exitLiftSensorPin(0),
   m_isExitLiftSensor(false),
   m_isInitialized(false),
-  m_isOccupied(true),
+  m_isOccupied(false),
   m_isLiftSensor(false),
   m_isPanicSensor(false),
   m_liftHillSensorPin(0),

@@ -18,7 +18,7 @@ namespace NS = bzones::tasks;
 NS::bZoneLayout::bZoneLayout(
     void)
 : m_isInitialized(false),
-  m_isOccupied(false),
+  m_isOccupied(true),
   m_nextZone(nullptr)
 {
 }
