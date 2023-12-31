@@ -49,14 +49,19 @@ namespace bzones
         const uint16_t LIFT_HILL_READER_TASK_STACK_SIZE = 96;
 
         /**
-         * @brief The size of the stack for the station task.
-         */
-        const uint16_t STATION_TASK_STACK_SIZE = 64;
-
-        /**
          * @brief The number of objects that subscribe to pin events.
         */
-        const uint8_t PIN_EVENT_NOTIFIERS_SIZE = 1;
+        const uint8_t PIN_EVENT_NOTIFIERS_SIZE = 3;
+
+        /**
+         * @brief The size of the stack for the station task.
+         */
+        const uint16_t STATION_TASK_STACK_SIZE = 96;
+
+        /**
+         * @brief The size of the stack for the transfer track task.
+         */
+        const uint16_t TRANSFER_TRACK_STACK_SIZE = 96;
 
     } // namespace contants
 } // namespace bzones

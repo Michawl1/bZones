@@ -1,10 +1,10 @@
 /*
  *******************************************************************************
- * @file bZoneStation.hpp
+ * @file bZoneTransferTrack.hpp
  * @author Michael Thompson (mthompsonkp11@gmail.com)
- * @date 13 October 2023
+ * @date 30 December 2023
  * 
- * @brief This file outlines a block zone task for a station.
+ * @brief This file outlines a block zone task for the transfer track.
  * @details
  * 
  *******************************************************************************
@@ -23,7 +23,7 @@ namespace bzones
 {
     namespace tasks
     {
-        class bZoneStation:
+        class bZoneTransferTrack:
             public bzones::interfaces::ITask,
             public bzones::interfaces::IBlockZone,
             public bzones::interfaces::IPinEvent
@@ -52,7 +52,7 @@ namespace bzones
                  * one is clear or not.
                  */
                 bzones::interfaces::IBlockZone* m_nextZone;
-            
+
             public:
                 /**
                  * @brief Empty constructor.
@@ -62,7 +62,7 @@ namespace bzones
                  * a value.
                  * @details
                  */
-                bZoneStation(
+                bZoneTransferTrack(
                     void);
 
                 /**

@@ -57,10 +57,6 @@ void NS::bZoneLiftHill::pinEvent(
     uint8_t _pin,
     uint8_t _state)
 {
-    Serial.print("pin: ");
-    Serial.print(_pin);
-    Serial.print(" state: ");
-    Serial.println(_state);
     if(_pin == m_liftHillSensorPin
         && _state == 0)
     {
@@ -89,7 +85,6 @@ void NS::bZoneLiftHill::run(
             {
                 if(m_isLiftSensor)
                 {
-                    Serial.println("Lift hill sensor detected...");
                     m_currState = liftHillStates::WAITING_FOR_NEXT_ZONE_CLEAR;
                     m_isOccupied = true;
                 }

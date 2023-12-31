@@ -20,6 +20,7 @@
 #include "bZoneLayout.hpp"
 #include "bZoneLiftHill.hpp"
 #include "bZoneStation.hpp"
+#include "bZoneTransferTrack.hpp"
 #include "Constants.hpp"
 #include "halReaderTask.hpp"
 
@@ -31,6 +32,7 @@ static bzones::tasks::Blink g_blinkTask;
 static bzones::tasks::bZoneLayout g_bZoneLayout;
 static bzones::tasks::bZoneLiftHill g_bZoneLiftHill;
 static bzones::tasks::bZoneStation g_bZoneStation;
+static bzones::tasks::bZoneTransferTrack g_bZoneTransferTrack;
 static bzones::tasks::HalReaderTask g_halReaderTask;
 static Adafruit_PWMServoDriver g_motorDriver;
 
@@ -93,16 +95,6 @@ void setup(
         &g_blinkTask,
         CONSTANTS::Priority::BLINK,
         nullptr);
-        
-    g_bZoneLayout.init(
-        &g_bZoneStation);
-    xTaskCreate(
-        taskLauncher,
-        nullptr,
-        CONSTANTS::LIFT_HILL_READER_TASK_STACK_SIZE,
-        &g_bZoneLayout,
-        CONSTANTS::Priority::ZONES,
-        nullptr);
 
     g_bZoneLiftHill.init(
         2,
@@ -118,17 +110,41 @@ void setup(
         CONSTANTS::Priority::ZONES,
         nullptr);
     g_pinEventNotifiers[0] = &g_bZoneLiftHill;
+        
+    g_bZoneLayout.init(
+        &g_bZoneTransferTrack);
+    xTaskCreate(
+        taskLauncher,
+        nullptr,
+        CONSTANTS::LIFT_HILL_READER_TASK_STACK_SIZE,
+        &g_bZoneLayout,
+        CONSTANTS::Priority::ZONES,
+        nullptr);
+    g_pinEventNotifiers[1] = &g_bZoneLayout;
+
+    g_bZoneTransferTrack.init(
+        &g_bZoneStation,
+        &g_motorDriver);
+    xTaskCreate(
+        taskLauncher,
+        nullptr,
+        CONSTANTS::TRANSFER_TRACK_STACK_SIZE,
+        &g_bZoneTransferTrack,
+        CONSTANTS::Priority::ZONES,
+        nullptr);
+    g_pinEventNotifiers[2] = &g_bZoneTransferTrack;
     
-    // g_bZoneStation.init(
-    //     &g_bZoneLiftHill,
-    //     &g_motorDriver);
+    g_bZoneStation.init(
+        &g_bZoneLiftHill,
+        &g_motorDriver);
     // xTaskCreate(
     //     taskLauncher,
     //     nullptr,
     //     CONSTANTS::STATION_TASK_STACK_SIZE,
     //     &g_bZoneStation,
-    //     CONSTANTS::Priority::STATION,
+    //     CONSTANTS::Priority::ZONES,
     //     nullptr);
+    //g_pinEventNotifiers[3] = &g_bZoneStation;
 
     g_halReaderTask.init(
         0b00000011,
