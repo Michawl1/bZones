@@ -32,6 +32,21 @@ namespace bzones
         };
 
         /**
+         * @brief The pin numbers for each of the sensors.
+         */
+        enum Pins : uint8_t
+        {
+            STATION_POSITION_PIN = 2,        
+            STATION_EXIT_PIN = 3,
+            LIFT_HILL_POSITION_PIN = 4,
+            LIFT_HILL_EXIT_PIN = 5,
+            LAYOUT_POSITION_PIN = 6,
+            LAYOUT_EXIT_PIN = 7,
+            TRANSFER_TRACK_POSITION_PIN = 8,
+            TRANSFER_TRACK_EXIT_PIN = 9
+        };
+
+        /**
          * @brief The size of the stack for the blink task.
          */
         const uint16_t BLINK_TASK_STACK_SIZE = 48;

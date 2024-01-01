@@ -28,7 +28,7 @@ namespace bzones
             enum StationStates : uint8_t
             {
                 WAITING_FOR_ENTER_SENSOR = 1,
-                WAITING_FOR_POSITION_SENSOR = 2,
+                WAITING_FOR_HOLD_SENSOR = 2,
                 STATION_OPERATIONS = 3,
                 WAITING_FOR_NEXT_ZONE_CLEAR = 4,
                 WAITING_FOR_EXIT_SENSOR = 5,
@@ -58,6 +58,11 @@ namespace bzones
                 uint8_t m_exitSensorPin;
 
                 /**
+                 * @brief The pin number for the hold sensor pin.
+                 */
+                uint8_t m_holdSensorPin;
+
+                /**
                  * @brief A flag to inidicate of the enter sensor has been 
                  * triggered.
                  */
@@ -68,6 +73,12 @@ namespace bzones
                  * triggered
                  */
                 bool m_isExitSensor;
+
+                /**
+                 * @brief A flag to indicate if the position sensor has been 
+                 * triggered.
+                 */
+                bool m_isHoldSensor;
 
                 /**
                  * @brief A flag to indicate that this object has been 
@@ -82,12 +93,6 @@ namespace bzones
                 bool m_isOccupied;
 
                 /**
-                 * @brief A flag to indicate if the position sensor has been 
-                 * triggered.
-                 */
-                bool m_isPositionSensor;
-
-                /**
                  * @brief The motor driver used to control all motors on the
                  * system.
                  */
@@ -98,11 +103,6 @@ namespace bzones
                  * one is clear or not.
                  */
                 bzones::interfaces::IBlockZone* m_nextZone;
-
-                /**
-                 * @brief The pin number for the position sensor pin.
-                 */
-                uint8_t m_positionSensorPin;
             
             public:
                 /**
@@ -122,8 +122,7 @@ namespace bzones
                  * @post
                  * @param[in] _enterSensorPin The pin number for the enter 
                  * sensor.
-                 * @param[in] _positionSensorPin The pin number for the position
-                 * sensor.
+                 * @param[in] _holdSensorPin The pin number for the hold sensor.
                  * @param[in] _exitSensorPin The pin number for the exit sensor.
                  * @param[in] _nextZone The next block zone, used to know if it 
                  * is safe to dispatch.
@@ -135,7 +134,7 @@ namespace bzones
                  */
                 void init(
                     uint8_t _enterSensorPin,
-                    uint8_t _positionSensorPin,
+                    uint8_t _holdSensorPin,
                     uint8_t _exitSensorPin,
                     bzones::interfaces::IBlockZone* _nextZone,
                     Adafruit_PWMServoDriver* _motorDriver);

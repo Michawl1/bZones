@@ -98,9 +98,9 @@ void setup(
         nullptr);
 
     g_bZoneLiftHill.init(
-        2,
-        3,
-        4,
+        CONSTANTS::STATION_EXIT_PIN,
+        CONSTANTS::LIFT_HILL_POSITION_PIN,
+        CONSTANTS::LIFT_HILL_EXIT_PIN,
         &g_bZoneLayout,
         &g_motorDriver);
     xTaskCreate(
@@ -136,9 +136,9 @@ void setup(
     g_pinEventNotifiers[2] = &g_bZoneTransferTrack;
     
     g_bZoneStation.init(
-        6,
-        5,
-        2,
+        CONSTANTS::Pins::TRANSFER_TRACK_EXIT_PIN,
+        CONSTANTS::Pins::STATION_POSITION_PIN,
+        CONSTANTS::Pins::STATION_EXIT_PIN,
         &g_bZoneLiftHill,
         &g_motorDriver);
     xTaskCreate(

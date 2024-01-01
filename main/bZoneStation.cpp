@@ -20,26 +20,26 @@ NS::bZoneStation::bZoneStation(
 : m_currState(bzones::tasks::stationStates::RESET),
   m_enterSensorPin(0),
   m_exitSensorPin(0),
+  m_holdSensorPin(0),
   m_isEnterSensor(false),
   m_isExitSensor(false),
+  m_isHoldSensor(false),
   m_isInitialized(false),
   m_isOccupied(true),
-  m_isPositionSensor(false),
   m_motorDriver(nullptr),
-  m_nextZone(nullptr),
-  m_positionSensorPin(0)
+  m_nextZone(nullptr)
 {
 }
 
 void NS::bZoneStation::init(
     uint8_t _enterSensorPin,
-    uint8_t _positionSensorPin,
+    uint8_t _holdSensorPin,
     uint8_t _exitSensorPin,
     bzones::interfaces::IBlockZone* _nextZone,
     Adafruit_PWMServoDriver* _motorDriver)
 {
     m_enterSensorPin = _enterSensorPin;
-    m_positionSensorPin = _positionSensorPin;
+    m_holdSensorPin = _holdSensorPin;
     m_exitSensorPin = _exitSensorPin;
     m_nextZone = _nextZone;
     m_motorDriver = _motorDriver;
@@ -62,10 +62,10 @@ void NS::bZoneStation::pinEvent(
     {
         m_isEnterSensor = true;
     }
-    else if(_pin == m_positionSensorPin
+    else if(_pin == m_holdSensorPin
         && _state == 0)
     {
-        m_isPositionSensor = true;
+        m_isHoldSensor = true;
     }
     else if(_pin == m_exitSensorPin
         && _state == 0)
@@ -89,15 +89,15 @@ void NS::bZoneStation::run(
                         4,
                         0,
                         4095);
-                    m_currState = stationStates::WAITING_FOR_POSITION_SENSOR;
+                    m_currState = stationStates::WAITING_FOR_HOLD_SENSOR;
                     m_isOccupied = true;
                 }
             }
             break;
 
-            case stationStates::WAITING_FOR_POSITION_SENSOR:
+            case stationStates::WAITING_FOR_HOLD_SENSOR:
             {
-                if(m_isPositionSensor)
+                if(m_isHoldSensor)
                 {
                     m_motorDriver->setPWM(
                         4,
@@ -115,12 +115,12 @@ void NS::bZoneStation::run(
                     5,
                     0,
                     100);
-                vTaskDelay(1000 / portTICK_PERIOD_MS);
+                vTaskDelay(2500 / portTICK_PERIOD_MS);
                 m_motorDriver->setPWM(
                     5,
                     0,
                     200);
-                vTaskDelay(2000 / portTICK_PERIOD_MS);
+                vTaskDelay(1000 / portTICK_PERIOD_MS);
                 m_currState = stationStates::WAITING_FOR_NEXT_ZONE_CLEAR;
             }
             break;
@@ -141,7 +141,11 @@ void NS::bZoneStation::run(
             case stationStates::WAITING_FOR_EXIT_SENSOR:
             {
                 if(m_isExitSensor)
-                {
+                {                    
+                    m_motorDriver->setPWM(
+                        4,
+                        0,
+                        0);
                     m_currState = stationStates::RESET;
                 }
             }
@@ -150,7 +154,7 @@ void NS::bZoneStation::run(
             case stationStates::RESET:
             {
                 m_isEnterSensor = false;
-                m_isPositionSensor = false;
+                m_isHoldSensor = false;
                 m_isExitSensor = false;
                 m_isOccupied = false;
 
