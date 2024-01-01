@@ -95,6 +95,7 @@ void NS::bZoneTransferTrack::run(
                         3,
                         0,
                         4095);
+                    m_isOccupied = true;
                     m_currState = transferTrackStates::WAITING_FOR_HOLD_SENSOR;
                 }
             }
