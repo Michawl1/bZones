@@ -136,6 +136,7 @@ void setup(
     g_pinEventNotifiers[2] = &g_bZoneTransferTrack;
     
     g_bZoneStation.init(
+        6,
         5,
         2,
         &g_bZoneLiftHill,
