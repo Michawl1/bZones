@@ -83,7 +83,7 @@ void NS::bZoneLayout::run(
         {
             case layoutStates::INIT:
             {
-                m_currState = layoutStates::RESET;
+                m_currState = layoutStates::WAITING_FOR_HOLD_SENSOR;
             }
             break;
 

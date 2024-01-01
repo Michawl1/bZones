@@ -42,7 +42,13 @@ void NS::bZoneLiftHill::init(
     m_holdSensorPin = _holdSensorPin;
     m_exitSensorPin = _exitSensorPin;
     m_nextZone = _nextZone;
-    m_motorDriver = _motorDriver;
+    m_motorDriver = _motorDriver;                    
+    
+    m_motorDriver->setPWM(
+        15,
+        0,
+        1000);
+        m_currState = liftHillStates::RESET;
 
     m_isInitialized = true;
 }
