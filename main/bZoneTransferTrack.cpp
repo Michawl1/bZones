@@ -92,7 +92,7 @@ void NS::bZoneTransferTrack::run(
                 if(m_isEnterSensor)
                 {
                     m_motorDriver->setPWM(
-                        1,
+                        4,
                         0,
                         4095);
                     m_currState = transferTrackStates::WAITING_FOR_HOLD_SENSOR;
@@ -106,7 +106,7 @@ void NS::bZoneTransferTrack::run(
                 if(m_isHoldSensor)
                 {
                     m_motorDriver->setPWM(
-                        1,
+                        4,
                         0,
                         0);
                     m_currState = transferTrackStates::WAITING_FOR_NEXT_ZONE_CLEAR;
@@ -119,7 +119,7 @@ void NS::bZoneTransferTrack::run(
                 if(!m_nextZone->isOccupied())
                 {
                     m_motorDriver->setPWM(
-                        1,
+                        4,
                         0,
                         4095);
                     m_currState = transferTrackStates::WAITING_FOR_EXIT_SENSOR;
@@ -133,7 +133,7 @@ void NS::bZoneTransferTrack::run(
                 {  
                     vTaskDelay(1000 / portTICK_PERIOD_MS);
                     m_motorDriver->setPWM(
-                        1,
+                        4,
                         0,
                         0);
                     m_currState = transferTrackStates::RESET;
