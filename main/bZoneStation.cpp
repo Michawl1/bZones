@@ -17,7 +17,7 @@ namespace NS = bzones::tasks;
 
 NS::bZoneStation::bZoneStation(
     void)
-: m_currState(bzones::tasks::stationStates::RESET),
+: m_currState(bzones::tasks::stationStates::INIT),
   m_enterSensorPin(0),
   m_exitSensorPin(0),
   m_holdSensorPin(0),
@@ -81,6 +81,12 @@ void NS::bZoneStation::run(
     {
         switch(m_currState)
         {
+            case stationStates::INIT:
+            {
+                m_currState = stationStates::RESET;
+            }
+            break;
+
             case stationStates::WAITING_FOR_ENTER_SENSOR:
             {
                 if(m_isEnterSensor)

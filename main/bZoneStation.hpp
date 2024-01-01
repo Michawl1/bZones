@@ -27,6 +27,7 @@ namespace bzones
         {
             enum StationStates : uint8_t
             {
+                INIT = 0,
                 WAITING_FOR_ENTER_SENSOR = 1,
                 WAITING_FOR_HOLD_SENSOR = 2,
                 STATION_OPERATIONS = 3,

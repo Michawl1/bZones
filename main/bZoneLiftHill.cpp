@@ -17,7 +17,7 @@ namespace NS = bzones::tasks;
 
 NS::bZoneLiftHill::bZoneLiftHill(
     void)
-: m_currState(bzones::tasks::liftHillStates::RESET),
+: m_currState(bzones::tasks::liftHillStates::INIT),
   m_enterSensorPin(0),
   m_exitSensorPin(0),
   m_holdSensorPin(0),
@@ -81,6 +81,12 @@ void NS::bZoneLiftHill::run(
     {
         switch(m_currState)
         {
+            case liftHillStates::INIT:
+            {
+                m_currState = liftHillStates::RESET;
+            }
+            break;
+
             case liftHillStates::WAITING_FOR_ENTER_SENSOR:
             {
                 if(m_isEnterSensor)

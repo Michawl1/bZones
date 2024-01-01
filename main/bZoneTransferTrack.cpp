@@ -17,7 +17,7 @@
 
  NS::bZoneTransferTrack::bZoneTransferTrack(
     void)
-: m_currState(bzones::tasks::transferTrackStates::RESET),
+: m_currState(bzones::tasks::transferTrackStates::INIT),
   m_enterSensorPin(0),
   m_exitSensorPin(0),
   m_holdSensorPin(0),
@@ -81,6 +81,12 @@ void NS::bZoneTransferTrack::run(
     {
         switch(m_currState)
         {
+            case transferTrackStates::INIT:
+            {
+                m_currState = transferTrackStates::RESET;
+            }
+            break;
+
             case transferTrackStates::WAITING_FOR_ENTER_SENSOR:
             {
                 if(m_isEnterSensor)

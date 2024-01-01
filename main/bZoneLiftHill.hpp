@@ -27,9 +27,10 @@ namespace bzones
         {
             enum LiftHillStates : uint8_t
             {
+                INIT = 0,
                 WAITING_FOR_ENTER_SENSOR = 1,
-                WAITING_FOR_NEXT_ZONE_CLEAR = 3,
-                WAITING_FOR_EXIT_SENSOR = 4,
+                WAITING_FOR_NEXT_ZONE_CLEAR = 2,
+                WAITING_FOR_EXIT_SENSOR = 3,
                 RESET
             };
         } // namespace liftHillStates
