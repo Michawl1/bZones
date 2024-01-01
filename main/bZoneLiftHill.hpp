@@ -27,7 +27,8 @@ namespace bzones
         {
             enum LiftHillStates : uint8_t
             {
-                WAITING_FOR_LIFT_SENSOR = 1,
+                INIT = 0,
+                WAITING_FOR_ENTER_SENSOR = 1,
                 WAITING_FOR_NEXT_ZONE_CLEAR = 2,
                 WAITING_FOR_EXIT_SENSOR = 3,
                 RESET
@@ -46,15 +47,37 @@ namespace bzones
                 liftHillStates::LiftHillStates m_currState;
 
                 /**
-                 * @brief The pin index for the exit lift hill sensor.
+                 * @brief The pin number for the senterSensor
                  */
-                uint8_t m_exitLiftSensorPin;
+                uint8_t m_enterSensorPin;
 
                 /**
-                 * @brief A flag to indicate that the exit lift hill sensor
-                 * has been activated.
+                 * @brief The pin number for the exit sensor pin.
                  */
-                bool m_isExitLiftSensor;
+                uint8_t m_exitSensorPin;
+
+                /**
+                 * @brief The pin number for the hold sensor pin.
+                 */
+                uint8_t m_holdSensorPin;
+
+                /**
+                 * @brief A flag to inidicate of the enter sensor has been 
+                 * triggered.
+                 */
+                bool m_isEnterSensor;
+
+                /**
+                 * @brief A flag to indicate if the exit sensor has been
+                 * triggered
+                 */
+                bool m_isExitSensor;
+
+                /**
+                 * @brief A flag to indicate if the position sensor has been 
+                 * triggered.
+                 */
+                bool m_isHoldSensor;
 
                 /**
                  * @brief A flag to indicate that this object has been 
@@ -69,23 +92,6 @@ namespace bzones
                 bool m_isOccupied;
 
                 /**
-                 * @brief A flag to indicate that the lift sensor has been 
-                 * activated.
-                 */
-                bool m_isLiftSensor;
-
-                /**
-                 * @brief A flag to indicate that the panic sensor has been 
-                 * activated.
-                 */
-                bool m_isPanicSensor;
-
-                /**
-                 * @brief The pin index for the lift hill sensor.
-                */
-                uint8_t m_liftHillSensorPin;
-
-                /**
                  * @brief The motor driver used to control all motors on the
                  * system.
                  */
@@ -96,11 +102,6 @@ namespace bzones
                  * one is clear or not.
                  */
                 bzones::interfaces::IBlockZone* m_nextZone;
-
-                /**
-                 * @brief The pin index for the panic sensor.
-                 */
-                uint8_t m_panicSensorPin;
             
             public:
                 /**
@@ -118,12 +119,10 @@ namespace bzones
                  * @brief Initializes this object.
                  * @pre
                  * @post
-                 * @param[in] _liftHillSensorPin The pin index for the lift hill
+                 * @param[in] _enterSensorPin The pin number for the enter 
                  * sensor.
-                 * @param[in] _panicSensorPin The pin index for the panic 
-                 * sensor.
-                 * @param[in] _exitLiftSensorPin The pin index for the exit lift
-                 * hill sensor.
+                 * @param[in] _holdSensorPin The pin number for the hold sensor.
+                 * @param[in] _exitSensorPin The pin number for the exit sensor.
                  * @param[in] _nextZone The next block zone, used to know if it 
                  * is safe to dispatch.
                  * @param[in] _motorDriver The motor driver used to control all
@@ -133,9 +132,9 @@ namespace bzones
                  * @details
                  */
                 void init(
-                    uint8_t _liftHillSensorPin,
-                    uint8_t _panicSensorPin,
-                    uint8_t _exitLiftSensorPin,
+                    uint8_t _enterSensorPin,
+                    uint8_t _holdSensorPin,
+                    uint8_t _exitSensorPin,
                     bzones::interfaces::IBlockZone* _nextZone,
                     Adafruit_PWMServoDriver* _motorDriver);
 

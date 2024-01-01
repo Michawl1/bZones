@@ -17,32 +17,38 @@ namespace NS = bzones::tasks;
 
 NS::bZoneLiftHill::bZoneLiftHill(
     void)
-: m_currState(bzones::tasks::liftHillStates::RESET),
-  m_exitLiftSensorPin(0),
-  m_isExitLiftSensor(false),
+: m_currState(bzones::tasks::liftHillStates::INIT),
+  m_enterSensorPin(0),
+  m_exitSensorPin(0),
+  m_holdSensorPin(0),
+  m_isEnterSensor(false),
+  m_isExitSensor(false),
+  m_isHoldSensor(false),
   m_isInitialized(false),
-  m_isOccupied(false),
-  m_isLiftSensor(false),
-  m_isPanicSensor(false),
-  m_liftHillSensorPin(0),
+  m_isOccupied(true),
   m_motorDriver(nullptr),
-  m_nextZone(nullptr),
-  m_panicSensorPin(0)
+  m_nextZone(nullptr)
 {
 }
 
 void NS::bZoneLiftHill::init(
-    uint8_t _liftHillSensorPin,
-    uint8_t _panicSensorPin,
-    uint8_t _exitLiftSensorPin,
+    uint8_t _enterSensorPin,
+    uint8_t _holdSensorPin,
+    uint8_t _exitSensorPin,
     bzones::interfaces::IBlockZone* _nextZone,
     Adafruit_PWMServoDriver* _motorDriver)
 {
-    m_liftHillSensorPin = _liftHillSensorPin;
-    m_panicSensorPin = _panicSensorPin;
-    m_exitLiftSensorPin = _exitLiftSensorPin;
+    m_enterSensorPin = _enterSensorPin;
+    m_holdSensorPin = _holdSensorPin;
+    m_exitSensorPin = _exitSensorPin;
     m_nextZone = _nextZone;
-    m_motorDriver = _motorDriver;
+    m_motorDriver = _motorDriver;                    
+    
+    m_motorDriver->setPWM(
+        15,
+        0,
+        1000);
+        m_currState = liftHillStates::RESET;
 
     m_isInitialized = true;
 }
@@ -57,20 +63,20 @@ void NS::bZoneLiftHill::pinEvent(
     uint8_t _pin,
     uint8_t _state)
 {
-    if(_pin == m_liftHillSensorPin
+    if(_pin == m_enterSensorPin
         && _state == 0)
     {
-        m_isLiftSensor = true;
+        m_isEnterSensor = true;
     }
-    else if(_pin == m_panicSensorPin
+    else if(_pin == m_holdSensorPin
         && _state == 0)
     {
-        m_isPanicSensor = true;
+        m_isHoldSensor = true;
     }
-    else if(_pin == m_exitLiftSensorPin
+    else if(_pin == m_exitSensorPin
         && _state == 0)
     {
-        m_isExitLiftSensor = true;
+        m_isExitSensor = true;
     }
 }
 
@@ -81,10 +87,21 @@ void NS::bZoneLiftHill::run(
     {
         switch(m_currState)
         {
-            case liftHillStates::WAITING_FOR_LIFT_SENSOR:
+            case liftHillStates::INIT:
             {
-                if(m_isLiftSensor)
-                {
+                m_currState = liftHillStates::RESET;
+            }
+            break;
+
+            case liftHillStates::WAITING_FOR_ENTER_SENSOR:
+            {
+                if(m_isEnterSensor)
+                {                    
+                    m_motorDriver->setPWM(
+                        15,
+                        0,
+                        2500);
+                        
                     m_currState = liftHillStates::WAITING_FOR_NEXT_ZONE_CLEAR;
                     m_isOccupied = true;
                 }
@@ -93,8 +110,8 @@ void NS::bZoneLiftHill::run(
 
             case liftHillStates::WAITING_FOR_NEXT_ZONE_CLEAR:
             {
-                if(m_nextZone->isOccupied()
-                    && m_isPanicSensor)
+                if(m_isHoldSensor
+                    && m_nextZone->isOccupied())
                 {
                     m_motorDriver->setPWM(
                         15,
@@ -102,7 +119,11 @@ void NS::bZoneLiftHill::run(
                         0);
                 }
                 else if(!m_nextZone->isOccupied())
-                {                  
+                {
+                    m_motorDriver->setPWM(
+                        15,
+                        0,
+                        4095);
                     m_currState = liftHillStates::WAITING_FOR_EXIT_SENSOR;
                 }
             }
@@ -110,33 +131,29 @@ void NS::bZoneLiftHill::run(
 
             case liftHillStates::WAITING_FOR_EXIT_SENSOR:
             {
-                m_motorDriver->setPWM(
-                    15,
-                    0,
-                    4095);
-
-                if(m_isExitLiftSensor)
+                if(m_isExitSensor)
                 {
-                    m_currState = liftHillStates::RESET;
+                    vTaskDelay(250 / portTICK_PERIOD_MS);
+
+                    m_motorDriver->setPWM(
+                        15,
+                        0,
+                        1000);
+                        m_currState = liftHillStates::RESET;
                 }
             }
             break;
-
+                        
             case liftHillStates::RESET:
             {
-                m_currState = liftHillStates::WAITING_FOR_LIFT_SENSOR;
-                
-                m_motorDriver->setPWM(
-                    15,
-                    0,
-                    1000);
-                
-                // Wait a bit for the train to leave.
-                vTaskDelay(250 / portTICK_PERIOD_MS);
-                m_isLiftSensor = false;
-                m_isPanicSensor = false;
-                m_isExitLiftSensor = false;
+                m_isEnterSensor = false;
+                m_isHoldSensor = false;
+                m_isExitSensor = false;
+                m_isOccupied = false;
+
+                m_currState = liftHillStates::WAITING_FOR_ENTER_SENSOR;
             }
+            break;
         }
         vTaskDelay(100 / portTICK_PERIOD_MS);
     }

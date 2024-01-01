@@ -25,6 +25,7 @@
 #include "halReaderTask.hpp"
 
 #define configMINIMAL_STACK_SIZE    ((unsigned short)32)
+#define configMAX_PRIORITIES 10
 
 namespace CONSTANTS = bzones::constants;
 
@@ -97,9 +98,9 @@ void setup(
         nullptr);
 
     g_bZoneLiftHill.init(
-        2,
-        3,
-        4,
+        CONSTANTS::STATION_EXIT_PIN,
+        CONSTANTS::LIFT_HILL_HOLD_PIN,
+        CONSTANTS::LIFT_HILL_EXIT_PIN,
         &g_bZoneLayout,
         &g_motorDriver);
     xTaskCreate(
@@ -107,22 +108,29 @@ void setup(
         nullptr,
         CONSTANTS::LIFT_HILL_READER_TASK_STACK_SIZE,
         &g_bZoneLiftHill,
-        CONSTANTS::Priority::ZONES,
+        CONSTANTS::Priority::LIFT_HILL,
         nullptr);
     g_pinEventNotifiers[0] = &g_bZoneLiftHill;
         
     g_bZoneLayout.init(
-        &g_bZoneTransferTrack);
+        CONSTANTS::LIFT_HILL_EXIT_PIN,
+        CONSTANTS::LAYOUT_HOLD_PIN,
+        CONSTANTS::LAYOUT_EXIT_PIN,
+        &g_bZoneTransferTrack,
+        &g_motorDriver);
     xTaskCreate(
         taskLauncher,
         nullptr,
-        CONSTANTS::LIFT_HILL_READER_TASK_STACK_SIZE,
+        CONSTANTS::LAYOUT_TASK_STACK_SIZE,
         &g_bZoneLayout,
-        CONSTANTS::Priority::ZONES,
+        CONSTANTS::Priority::LAYOUT,
         nullptr);
     g_pinEventNotifiers[1] = &g_bZoneLayout;
 
     g_bZoneTransferTrack.init(
+        CONSTANTS::LAYOUT_EXIT_PIN,
+        CONSTANTS::TRANSFER_TRACK_HOLD_PIN,
+        CONSTANTS::TRANSFER_TRACK_EXIT_PIN,
         &g_bZoneStation,
         &g_motorDriver);
     xTaskCreate(
@@ -130,11 +138,14 @@ void setup(
         nullptr,
         CONSTANTS::TRANSFER_TRACK_STACK_SIZE,
         &g_bZoneTransferTrack,
-        CONSTANTS::Priority::ZONES,
+        CONSTANTS::Priority::TRANFER_TRACK,
         nullptr);
     g_pinEventNotifiers[2] = &g_bZoneTransferTrack;
     
     g_bZoneStation.init(
+        CONSTANTS::Pins::TRANSFER_TRACK_EXIT_PIN,
+        CONSTANTS::Pins::STATION_HOLD_PIN,
+        CONSTANTS::Pins::STATION_EXIT_PIN,
         &g_bZoneLiftHill,
         &g_motorDriver);
     xTaskCreate(
@@ -142,9 +153,9 @@ void setup(
         nullptr,
         CONSTANTS::STATION_TASK_STACK_SIZE,
         &g_bZoneStation,
-        CONSTANTS::Priority::ZONES,
+        CONSTANTS::Priority::STATION,
         nullptr);
-    //g_pinEventNotifiers[3] = &g_bZoneStation;
+    g_pinEventNotifiers[3] = &g_bZoneStation;
 
     g_halReaderTask.init(
         0b00000011,

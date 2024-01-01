@@ -23,12 +23,64 @@ namespace bzones
 {
     namespace tasks
     {
+        namespace stationStates
+        {
+            enum StationStates : uint8_t
+            {
+                INIT = 0,
+                WAITING_FOR_ENTER_SENSOR = 1,
+                WAITING_FOR_HOLD_SENSOR = 2,
+                STATION_OPERATIONS = 3,
+                WAITING_FOR_NEXT_ZONE_CLEAR = 4,
+                WAITING_FOR_EXIT_SENSOR = 5,
+                RESET
+            };
+        } // namespace stationStates
+
         class bZoneStation:
             public bzones::interfaces::ITask,
             public bzones::interfaces::IBlockZone,
             public bzones::interfaces::IPinEvent
         {
             private:
+                /**
+                 * @brief The current state of this task.
+                 */
+                stationStates::StationStates m_currState;
+
+                /**
+                 * @brief The pin number for the senterSensor
+                 */
+                uint8_t m_enterSensorPin;
+
+                /**
+                 * @brief The pin number for the exit sensor pin.
+                 */
+                uint8_t m_exitSensorPin;
+
+                /**
+                 * @brief The pin number for the hold sensor pin.
+                 */
+                uint8_t m_holdSensorPin;
+
+                /**
+                 * @brief A flag to inidicate of the enter sensor has been 
+                 * triggered.
+                 */
+                bool m_isEnterSensor;
+
+                /**
+                 * @brief A flag to indicate if the exit sensor has been
+                 * triggered
+                 */
+                bool m_isExitSensor;
+
+                /**
+                 * @brief A flag to indicate if the position sensor has been 
+                 * triggered.
+                 */
+                bool m_isHoldSensor;
+
                 /**
                  * @brief A flag to indicate that this object has been 
                  * initialized.
@@ -69,6 +121,10 @@ namespace bzones
                  * @brief Initializes this object.
                  * @pre
                  * @post
+                 * @param[in] _enterSensorPin The pin number for the enter 
+                 * sensor.
+                 * @param[in] _holdSensorPin The pin number for the hold sensor.
+                 * @param[in] _exitSensorPin The pin number for the exit sensor.
                  * @param[in] _nextZone The next block zone, used to know if it 
                  * is safe to dispatch.
                  * @param[in] _motorDriver The motor driver used to control all
@@ -78,6 +134,9 @@ namespace bzones
                  * @details
                  */
                 void init(
+                    uint8_t _enterSensorPin,
+                    uint8_t _holdSensorPin,
+                    uint8_t _exitSensorPin,
                     bzones::interfaces::IBlockZone* _nextZone,
                     Adafruit_PWMServoDriver* _motorDriver);
 

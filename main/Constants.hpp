@@ -24,8 +24,26 @@ namespace bzones
         enum Priority : uint8_t
         {
             BLINK = 0,
-            ZONES = 1,
-            HAL_READER = 2
+            TRANFER_TRACK,
+            LAYOUT,
+            LIFT_HILL,
+            STATION,
+            HAL_READER
+        };
+
+        /**
+         * @brief The pin numbers for each of the sensors.
+         */
+        enum Pins : uint8_t
+        {
+            STATION_HOLD_PIN = 2,        
+            STATION_EXIT_PIN = 3,
+            LIFT_HILL_HOLD_PIN = 4,
+            LIFT_HILL_EXIT_PIN = 5,
+            LAYOUT_HOLD_PIN = 6,
+            LAYOUT_EXIT_PIN = 7,
+            TRANSFER_TRACK_HOLD_PIN = 8,
+            TRANSFER_TRACK_EXIT_PIN = 9
         };
 
         /**
@@ -41,27 +59,27 @@ namespace bzones
         /**
          * @brief The size of the stack for the layout task.
          */
-        const uint16_t LAYOUT_TASK_STACK_SIZE = 72;
+        const uint16_t LAYOUT_TASK_STACK_SIZE = 68;
 
         /**
          * @brief The stack size for the lift hill task.
          */
-        const uint16_t LIFT_HILL_READER_TASK_STACK_SIZE = 72;
+        const uint16_t LIFT_HILL_READER_TASK_STACK_SIZE = 68;
 
         /**
          * @brief The number of objects that subscribe to pin events.
         */
-        const uint8_t PIN_EVENT_NOTIFIERS_SIZE = 3;
+        const uint8_t PIN_EVENT_NOTIFIERS_SIZE = 4;
 
         /**
          * @brief The size of the stack for the station task.
          */
-        const uint16_t STATION_TASK_STACK_SIZE = 72;
+        const uint16_t STATION_TASK_STACK_SIZE = 68;
 
         /**
          * @brief The size of the stack for the transfer track task.
          */
-        const uint16_t TRANSFER_TRACK_STACK_SIZE = 72;
+        const uint16_t TRANSFER_TRACK_STACK_SIZE = 68;
 
     } // namespace contants
 } // namespace bzones
