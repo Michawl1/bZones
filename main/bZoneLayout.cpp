@@ -83,7 +83,7 @@ void NS::bZoneLayout::run(
         {
             case layoutStates::INIT:
             {
-                m_currState = layoutStates::WAITING_FOR_HOLD_SENSOR;
+                m_currState = layoutStates::WAITING_FOR_NEXT_ZONE_CLEAR;
             }
             break;
 
@@ -123,7 +123,7 @@ void NS::bZoneLayout::run(
             {
                 if(m_isExitSensor)
                 {
-                    vTaskDelay(1000 / portTICK_PERIOD_MS);
+                    vTaskDelay(1500 / portTICK_PERIOD_MS);
                     m_motorDriver->setPWM(
                         2,
                         0,
@@ -135,10 +135,10 @@ void NS::bZoneLayout::run(
 
             case layoutStates::RESET:
             {
+                m_isOccupied = false;                
                 m_isEnterSensor = false;
                 m_isHoldSensor = false;
                 m_isExitSensor = false;
-                m_isOccupied = false;
 
                 m_currState = layoutStates::WAITING_FOR_ENTER_SENSOR;
             }

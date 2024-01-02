@@ -146,10 +146,10 @@ void NS::bZoneLiftHill::run(
                         
             case liftHillStates::RESET:
             {
+                m_isOccupied = false;                
                 m_isEnterSensor = false;
                 m_isHoldSensor = false;
                 m_isExitSensor = false;
-                m_isOccupied = false;
 
                 m_currState = liftHillStates::WAITING_FOR_ENTER_SENSOR;
             }
