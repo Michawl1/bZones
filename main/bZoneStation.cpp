@@ -83,7 +83,7 @@ void NS::bZoneStation::run(
         {
             case stationStates::INIT:
             {
-                m_currState = stationStates::RESET;
+                m_currState = stationStates::STATION_OPERATIONS;
             }
             break;
 
@@ -97,6 +97,8 @@ void NS::bZoneStation::run(
                         4095);
                     m_currState = stationStates::WAITING_FOR_HOLD_SENSOR;
                     m_isOccupied = true;
+                    m_isHoldSensor = false;
+                    m_isExitSensor = false;
                 }
             }
             break;
@@ -110,6 +112,7 @@ void NS::bZoneStation::run(
                         0,
                         0);
                     m_currState = stationStates::STATION_OPERATIONS;
+                    m_isExitSensor = false;
                 }
             }
             break;
@@ -159,10 +162,10 @@ void NS::bZoneStation::run(
 
             case stationStates::RESET:
             {
+                m_isOccupied = false;
                 m_isEnterSensor = false;
                 m_isHoldSensor = false;
                 m_isExitSensor = false;
-                m_isOccupied = false;
 
                 m_currState = stationStates::WAITING_FOR_ENTER_SENSOR;
             }

@@ -104,6 +104,8 @@ void NS::bZoneLiftHill::run(
                         
                     m_currState = liftHillStates::WAITING_FOR_NEXT_ZONE_CLEAR;
                     m_isOccupied = true;
+                    m_isHoldSensor = false;
+                    m_isExitSensor = false;
                 }
             }
             break;
@@ -124,6 +126,7 @@ void NS::bZoneLiftHill::run(
                         15,
                         0,
                         4095);
+                    m_isExitSensor = false;
                     m_currState = liftHillStates::WAITING_FOR_EXIT_SENSOR;
                 }
             }
@@ -134,27 +137,27 @@ void NS::bZoneLiftHill::run(
                 if(m_isExitSensor)
                 {
                     vTaskDelay(250 / portTICK_PERIOD_MS);
-
                     m_motorDriver->setPWM(
                         15,
                         0,
                         1000);
-                        m_currState = liftHillStates::RESET;
+                    m_currState = liftHillStates::RESET;
                 }
             }
             break;
                         
             case liftHillStates::RESET:
             {
+                m_isOccupied = false;                
                 m_isEnterSensor = false;
                 m_isHoldSensor = false;
                 m_isExitSensor = false;
-                m_isOccupied = false;
 
                 m_currState = liftHillStates::WAITING_FOR_ENTER_SENSOR;
             }
             break;
         }
+
         vTaskDelay(100 / portTICK_PERIOD_MS);
     }
 }
