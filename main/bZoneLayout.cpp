@@ -93,6 +93,8 @@ void NS::bZoneLayout::run(
                 {
                     m_isOccupied = true;
                     m_currState = layoutStates::WAITING_FOR_HOLD_SENSOR;
+                    m_isHoldSensor = false;
+                    m_isExitSensor = false;
                 }
             }
             break;
@@ -102,6 +104,7 @@ void NS::bZoneLayout::run(
                 if(m_isHoldSensor)
                 {
                     m_currState = layoutStates::WAITING_FOR_NEXT_ZONE_CLEAR;
+                    m_isExitSensor = false;
                 }
             }
             break;
@@ -128,7 +131,6 @@ void NS::bZoneLayout::run(
                         2,
                         0,
                         0);
-                    vTaskDelay(5000 / portTICK_PERIOD_MS);
                     m_currState = layoutStates::RESET;
                 }
             }
@@ -145,7 +147,7 @@ void NS::bZoneLayout::run(
             }
             break;
         }
-        
+
         vTaskDelay(100 / portTICK_PERIOD_MS);
     }
 }

@@ -104,6 +104,8 @@ void NS::bZoneLiftHill::run(
                         
                     m_currState = liftHillStates::WAITING_FOR_NEXT_ZONE_CLEAR;
                     m_isOccupied = true;
+                    m_isHoldSensor = false;
+                    m_isExitSensor = false;
                 }
             }
             break;
@@ -124,6 +126,7 @@ void NS::bZoneLiftHill::run(
                         15,
                         0,
                         4095);
+                    m_isExitSensor = false;
                     m_currState = liftHillStates::WAITING_FOR_EXIT_SENSOR;
                 }
             }
@@ -138,7 +141,6 @@ void NS::bZoneLiftHill::run(
                         15,
                         0,
                         1000);
-                    vTaskDelay(5000 / portTICK_PERIOD_MS);
                     m_currState = liftHillStates::RESET;
                 }
             }
@@ -155,7 +157,7 @@ void NS::bZoneLiftHill::run(
             }
             break;
         }
-        
+
         vTaskDelay(100 / portTICK_PERIOD_MS);
     }
 }

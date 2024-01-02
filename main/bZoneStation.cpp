@@ -97,6 +97,8 @@ void NS::bZoneStation::run(
                         4095);
                     m_currState = stationStates::WAITING_FOR_HOLD_SENSOR;
                     m_isOccupied = true;
+                    m_isHoldSensor = false;
+                    m_isExitSensor = false;
                 }
             }
             break;
@@ -110,6 +112,7 @@ void NS::bZoneStation::run(
                         0,
                         0);
                     m_currState = stationStates::STATION_OPERATIONS;
+                    m_isExitSensor = false;
                 }
             }
             break;
@@ -152,7 +155,6 @@ void NS::bZoneStation::run(
                         4,
                         0,
                         0);
-                    vTaskDelay(5000 / portTICK_PERIOD_MS);
                     m_currState = stationStates::RESET;
                 }
             }
