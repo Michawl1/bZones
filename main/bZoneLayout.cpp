@@ -128,6 +128,7 @@ void NS::bZoneLayout::run(
                         2,
                         0,
                         0);
+                    vTaskDelay(5000 / portTICK_PERIOD_MS);
                     m_currState = layoutStates::RESET;
                 }
             }
@@ -144,6 +145,7 @@ void NS::bZoneLayout::run(
             }
             break;
         }
+        
         vTaskDelay(100 / portTICK_PERIOD_MS);
     }
 }

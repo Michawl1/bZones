@@ -152,6 +152,7 @@ void NS::bZoneStation::run(
                         4,
                         0,
                         0);
+                    vTaskDelay(5000 / portTICK_PERIOD_MS);
                     m_currState = stationStates::RESET;
                 }
             }

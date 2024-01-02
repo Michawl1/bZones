@@ -134,12 +134,12 @@ void NS::bZoneLiftHill::run(
                 if(m_isExitSensor)
                 {
                     vTaskDelay(250 / portTICK_PERIOD_MS);
-
                     m_motorDriver->setPWM(
                         15,
                         0,
                         1000);
-                        m_currState = liftHillStates::RESET;
+                    vTaskDelay(5000 / portTICK_PERIOD_MS);
+                    m_currState = liftHillStates::RESET;
                 }
             }
             break;
@@ -155,6 +155,7 @@ void NS::bZoneLiftHill::run(
             }
             break;
         }
+        
         vTaskDelay(100 / portTICK_PERIOD_MS);
     }
 }

@@ -136,6 +136,7 @@ void NS::bZoneTransferTrack::run(
                         3,
                         0,
                         0);
+                    vTaskDelay(5000 / portTICK_PERIOD_MS);
                     m_currState = transferTrackStates::RESET;
                 }
             }
@@ -148,11 +149,11 @@ void NS::bZoneTransferTrack::run(
                 m_isHoldSensor = false;
                 m_isExitSensor = false;
 
-
                 m_currState = transferTrackStates::WAITING_FOR_ENTER_SENSOR;
             }
             break;
         }
+
         vTaskDelay(100 / portTICK_PERIOD_MS);
     }
 }
